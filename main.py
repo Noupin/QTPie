@@ -21,7 +21,7 @@ from tunable import Tunable
 
 class Main:
     """
-    Master class for the Forge application
+    Master class for the QTPie Example application
     """
 
     def __init__(self):
