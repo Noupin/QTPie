@@ -182,7 +182,7 @@ class QTPie:
 
         return btn
     
-    def addImage(self, gridData, name="", filename="C:/Coding/Python/ML/Forge/icon.png", keepAR=True, enableDrop=False, align="center"):
+    def addImage(self, gridData, name="", filename="smile.jpg", keepAR=True, enableDrop=False, align="center"):
         """
         Combines the basic Image code into one function with added functionality and support for CSS syntax
 
@@ -255,7 +255,7 @@ class QTPie:
 
         return volume
 
-    def addVideo(self, gridData, name="", filename=r"C:\Users\naper\OneDrive\Pictures\Camera Roll\elon.mp4", enableDrop=False):
+    def addVideo(self, gridData, name="", filename=r"ChrisH.mp4", enableDrop=False):
         """
         Combines the basic Video code into one function with added functionality and support for CSS syntax
 
