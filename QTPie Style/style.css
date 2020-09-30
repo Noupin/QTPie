@@ -1,0 +1,119 @@
+/*Window*/
+QMainWindow{
+    background-color: #ececec;
+}
+
+/*Widget*/
+QWidget{
+    background-color:  #ececec;
+}
+QWidget#VideoControls{
+    background-color:rgba(0, 0, 0, 0);
+}
+
+/*Grid Layout*/
+QGridLayout{
+    background-color:rgba(0, 0, 0, 0);
+}
+
+/*Label*/
+QLabel{
+    font: 20pt Calibri;
+}
+QLabel#Image{
+    background-color:rgba(0, 0, 0, 0);
+}
+QLabel#Spacer{
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/*Push Button*/
+QPushButton {
+    background-color: #ececec00;
+    border-radius: 6px;
+}
+QPushButton#maleBtn{
+    background-color: #3c3c94;
+}
+QPushButton#femaleBtn{
+    background-color: #943c3c;
+}
+QPushButton:pressed{
+    border: 1px solid #8f8f91;
+}
+QPushButton#VideoPlayPause{
+    background-color: #51af6d;
+}
+
+/*Progress Bar*/
+QProgressBar{
+    border-radius: 6px;
+    border: 2px solid black;
+    text-align: center;
+}
+QProgressBar::chunk{
+    background-color: #3c6294;
+}
+
+/*Text Box*/
+QLineEdit{
+    border: 2px solid black;
+    border-radius: 6px;
+}
+
+/*Dropdown*/
+QComboBox{
+    border: 2px solid black;
+}
+
+/*Slider*/
+QSlider::groove:horizontal {
+    background-color: #cecece;
+	border: 0px; 
+	height: 10px; 
+	border-radius: 5px;
+}
+QSlider::handle:horizontal { 
+	background-color: #51af6d; 
+	border: 2px solid #51af6d; 
+	width: 16px; 
+	height: 20px; 
+	margin-top: -5px; 
+    margin-bottom: -5px;
+    margin-left: 0px;
+    margin-right: 0px;
+	border-radius: 10px; 
+}
+QSlider::sub-page:horizontal {
+    background-color: #645b8d;
+    border: 2px solid #645b8d;
+    height: 6px;
+    margin: 2px;
+    border-radius: 3px; /*Border radius cannot be more than the half of the height of the element*/
+}
+
+/*Checkbox*/
+QCheckBox{
+    background-color: rgba(0, 128, 0, 0);
+}
+
+/*Radio Button*/
+QRadioButton{
+    background-color: rgba(0, 128, 0, 0);
+}
+
+/*Scroll Area*/
+QScrollArea{
+    border: 0px;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/*Dial*/
+QDial{
+    background-color: #00ffc8;
+}
+
+/*Video*/
+QVideoWidget{
+    background-color: rgba(0, 0, 0, 0);
+}
