@@ -109,7 +109,7 @@ class Actions:
 
         Args:
             media (QTPieMeida): The media player that holds media
-            controller (QTPieSlider or QTPieDial): Controls the volume from 0-duration values
+            controller (QTPieSlider or QTPieDial): Controls the videos position from 0-duration values
         """
 
         media.setPosition(controller.value())
@@ -120,7 +120,7 @@ class Actions:
 
         Args:
             media (QTPieMeida): The media player that holds media
-            controller (QTPieSlider or QTPieDial): Controls the volume from 0-duration values
+            controller (QTPieSlider or QTPieDial): Controls the videos position from 0-duration values
         """
 
         controller.setValue(media.position())
@@ -131,7 +131,29 @@ class Actions:
 
         Args:
             media (QTPieMeida): The media player that holds media
-            controller (QTPieSlider or QTPieDial): Controls the volume from 0-duration values
+            controller (QTPieSlider or QTPieDial): Controls the videos position from 0-duration values
         """
 
         controller.setRange(0, media.duration())
+    
+    def showControls(self, controls):
+        """
+        Enables the playPause, volume, and progress widgets passed
+
+        Args:
+            controls (List of QTPieMedia Controls): A list of QTPieButtons, QTPieSliders or QTPieDial
+        """
+
+        for _ in controls:
+            _.setHidden(False)
+    
+    def hideControls(self, controls):
+        """
+        Enables the playPause, volume, and progress widgets passed
+
+        Args:
+            controls (List of QTPieMedia Controls): A list of QTPieButtons, QTPieSliders or QTPieDial
+        """
+
+        for _ in controls:
+            _.setHidden(True)

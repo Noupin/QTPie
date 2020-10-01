@@ -308,8 +308,15 @@ class QTPie:
         volume = self.makeVolume(media)
         vProgress = self.makeVProgressBar(media)
 
+        vidControls = [playPause, volume, vProgress]
+
+        playPause.setHidden(True)
+        volume.setHidden(True)
+        vProgress.setHidden(True)
+
         mediaGrid = QtWidgets.QGridLayout()
         mediaGrid.setObjectName("VideoControls")
+        mediaGrid.setSpacing(0)
         mediaGrid.setContentsMargins(0, 0, 0, 0)
 
         mediaGridCount = 0
@@ -325,9 +332,11 @@ class QTPie:
         mediaWidget = QTPieWidget()
         mediaWidget.setObjectName("VideoControls")
         mediaWidget.setLayout(mediaGrid)
+        mediaWidget.setMouseTracking(True)
         mediaWidget.clicked.connect(lambda: self.actions.playPause(media, playPause, self.app))
+        mediaWidget.mouseEnter.connect(lambda: self.actions.showControls(vidControls))
+        mediaWidget.mouseLeave.connect(lambda: self.actions.hideControls(vidControls))
         mediaWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-
 
         self.grid.addWidget(mediaWidget, gridData[1], gridData[0], gridData[3], gridData[2])
         

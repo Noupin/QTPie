@@ -21,6 +21,8 @@ class QTPieWidget(QtWidgets.QWidget):
 
     resized = QtCore.pyqtSignal()
     clicked = QtCore.pyqtSignal()
+    mouseEnter = QtCore.pyqtSignal()
+    mouseLeave = QtCore.pyqtSignal()
 
     def __init__(self, parent=None):
         """
@@ -48,8 +50,30 @@ class QTPieWidget(QtWidgets.QWidget):
         Triggers when the window is resized
 
         Args:\n
-            event (PyQt5.QtGui.QResizeEvent): The PyQt5 resize event
+            event (PyQt5.QtGui.QMousePressEvent): The PyQt5 mouse press event
         """
 
         self.clicked.emit()
         return super(QTPieWidget, self).mousePressEvent(event)
+
+    def enterEvent(self, event):
+        """
+        Triggers when the mouse enters the QTPieWidget
+
+        Args:\n
+            event (PyQt5.QtGui.QEnterEvent): The PyQt5 mouse enter event
+        """
+
+        self.mouseEnter.emit()
+        return super(QTPieWidget, self).enterEvent(event)
+    
+    def leaveEvent(self, event):
+        """
+        Triggers when the mouse leaves the QTPieWidget
+
+        Args:\n
+            event (PyQt5.QtGui.QEnterEvent): The PyQt5 mouse leave event
+        """
+
+        self.mouseLeave.emit()
+        return super().leaveEvent(event)
