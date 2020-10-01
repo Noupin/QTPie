@@ -102,3 +102,36 @@ class Actions:
 
         media.setVolume(controller.value())
         utilities.changeJSON("volume", controller.value())
+    
+    def changeTimestamp(self, media, controller):
+        """
+        Changes the timestamp given a 1-100 value from the controller
+
+        Args:
+            media (QTPieMeida): The media player that holds media
+            controller (QTPieSlider or QTPieDial): Controls the volume from 0-duration values
+        """
+
+        media.setPosition(controller.value())
+    
+    def timestampChanged(self, media, controller):
+        """
+        Changes the controller when the timestamp changes
+
+        Args:
+            media (QTPieMeida): The media player that holds media
+            controller (QTPieSlider or QTPieDial): Controls the volume from 0-duration values
+        """
+
+        controller.setValue(media.position())
+    
+    def durationChanged(self, media, controller):
+        """
+        Changes the controller when the timestamp changes
+
+        Args:
+            media (QTPieMeida): The media player that holds media
+            controller (QTPieSlider or QTPieDial): Controls the volume from 0-duration values
+        """
+
+        controller.setRange(0, media.duration())

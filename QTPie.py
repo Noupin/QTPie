@@ -254,6 +254,31 @@ class QTPie:
         volume.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
         return volume
+    
+    def makeVProgressBar(self, media):
+        """
+        Create a volume slider for a given media to be put on a given parent
+
+        Args:\n
+            media (QTPieMedia): The holder of a type of media
+            parent (QTPieScrollArea or QTPieWidget): The widget for the button to be placed on
+
+        Returns:\n
+            QTPieSlider: An extension of the PyQt5 QSlider
+        """
+
+        vProgress = QTPieSlider()
+        vProgress.setObjectName("VideoProgressBar")
+        vProgress.setOrientation(QtCore.Qt.Horizontal)
+        vProgress.setMinimum(0)
+        vProgress.setMaximum(100)
+        vProgress.sliderMoved.connect(lambda: self.actions.changeTimestamp(media, vProgress))
+        media.positionChanged.connect(lambda: self.actions.timestampChanged(media, vProgress))
+        media.durationChanged.connect(lambda: self.actions.durationChanged(media, vProgress))
+        vProgress.setValue(media.position())
+        vProgress.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+
+        return vProgress
 
     def addVideo(self, gridData, name="", filename=r"ChrisH.mp4", enableDrop=False):
         """
@@ -281,6 +306,7 @@ class QTPie:
 
         playPause = self.makePlayPause(media)
         volume = self.makeVolume(media)
+        vProgress = self.makeVProgressBar(media)
 
         mediaGrid = QtWidgets.QGridLayout()
         mediaGrid.setObjectName("VideoControls")
@@ -293,12 +319,14 @@ class QTPie:
         
         mediaGrid.addWidget(video, 0, 0, 9, 12)
         mediaGrid.addWidget(playPause, 8, 0, 1, 1)
-        mediaGrid.addWidget(volume, 8, 9, 2, 3)
+        mediaGrid.addWidget(vProgress, 8, 2, 1, 6)
+        mediaGrid.addWidget(volume, 8, 9, 1, 3)
 
         mediaWidget = QTPieWidget()
         mediaWidget.setObjectName("VideoControls")
         mediaWidget.setLayout(mediaGrid)
         mediaWidget.clicked.connect(lambda: self.actions.playPause(media, playPause, self.app))
+        mediaWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
 
         self.grid.addWidget(mediaWidget, gridData[1], gridData[0], gridData[3], gridData[2])

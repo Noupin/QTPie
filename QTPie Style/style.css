@@ -42,7 +42,7 @@ QPushButton:pressed{
     border: 1px solid #8f8f91;
 }
 QPushButton#VideoPlayPause{
-    background-color: #51af6d;
+    background-color: rgba(0, 0, 0, 0);
 }
 
 /*Progress Bar*/
@@ -74,8 +74,8 @@ QSlider::groove:horizontal {
 	border-radius: 5px;
 }
 QSlider::handle:horizontal { 
-	background-color: #51af6d; 
-	border: 2px solid #51af6d; 
+	background-color: #ececec; 
+	border: 2px solid #cecece; 
 	width: 16px; 
 	height: 20px; 
 	margin-top: -5px; 
@@ -85,10 +85,17 @@ QSlider::handle:horizontal {
 	border-radius: 10px; 
 }
 QSlider::sub-page:horizontal {
-    background-color: #645b8d;
-    border: 2px solid #645b8d;
-    height: 6px;
-    margin: 2px;
+    background-color: #ececec;
+    border: 2px solid #cecece;
+    height: 10px;
+    margin: 1px;
+    border-radius: 3px; /*Border radius cannot be more than the half of the height of the element*/
+}
+QSlider#VideoProgressBar::sub-page:horizontal {
+    background-color: #d82739;
+    border: 0px solid #cecece;
+    height: 10px;
+    margin: 1px;
     border-radius: 3px; /*Border radius cannot be more than the half of the height of the element*/
 }
 
@@ -110,10 +117,15 @@ QScrollArea{
 
 /*Dial*/
 QDial{
-    background-color: #00ffc8;
+    background-color: #ececec;
 }
 
 /*Video*/
 QVideoWidget{
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/*Media*/
+QMediaPlayer{
     background-color: rgba(0, 0, 0, 0);
 }
