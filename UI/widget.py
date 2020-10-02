@@ -76,4 +76,4 @@ class QTPieWidget(QtWidgets.QWidget):
         """
 
         self.mouseLeave.emit()
-        return super().leaveEvent(event)
+        return super(QTPieWidget, self).leaveEvent(event)

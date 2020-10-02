@@ -20,6 +20,8 @@ class QTPieScroll(QtWidgets.QScrollArea):
     """
 
     clicked = QtCore.pyqtSignal()
+    mouseEnter = QtCore.pyqtSignal()
+    mouseLeave = QtCore.pyqtSignal()
 
     def __init__(self, parent=None):
         """
@@ -42,3 +44,24 @@ class QTPieScroll(QtWidgets.QScrollArea):
         self.clicked.emit()
         return super(QTPieScroll, self).mousePressEvent(event)
 
+    def enterEvent(self, event):
+        """
+        Triggers when the mouse enters the QTPieScroll
+
+        Args:\n
+            event (PyQt5.QtGui.QEnterEvent): The PyQt5 mouse enter event
+        """
+
+        self.mouseEnter.emit()
+        return super(QTPieScroll, self).enterEvent(event)
+    
+    def leaveEvent(self, event):
+        """
+        Triggers when the mouse leaves the QTPieScroll
+
+        Args:\n
+            event (PyQt5.QtGui.QEnterEvent): The PyQt5 mouse leave event
+        """
+
+        self.mouseLeave.emit()
+        return super(QTPieScroll, self).leaveEvent(event)

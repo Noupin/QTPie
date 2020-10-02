@@ -129,6 +129,14 @@ class QTPie:
         widget.setAlignment(alignments[alignment])
 
     def addGridRow(self, grid, count):
+        """
+        Adds a row to the given grid on the count
+
+        Args:
+            grid (PyQt5.QtWidgets.QGridLayout): A grid with count amount of rows
+            count (int): The current amount of rows the grid being passed in has
+        """
+
         for _ in range(12):
             grid.addWidget(self.space, count, _)
             grid.setColumnStretch(_, 1)
@@ -310,9 +318,7 @@ class QTPie:
 
         vidControls = [playPause, volume, vProgress]
 
-        playPause.setHidden(True)
-        volume.setHidden(True)
-        vProgress.setHidden(True)
+        self.actions.showControls(vidControls)
 
         mediaGrid = QtWidgets.QGridLayout()
         mediaGrid.setObjectName("VideoControls")
@@ -320,13 +326,13 @@ class QTPie:
         mediaGrid.setContentsMargins(0, 0, 0, 0)
 
         mediaGridCount = 0
-        for _ in range(9):
+        for _ in range(1):
             self.addGridRow(mediaGrid, mediaGridCount)
             mediaGridCount += 1
         
         mediaGrid.addWidget(video, 0, 0, 9, 12)
         mediaGrid.addWidget(playPause, 8, 0, 1, 1)
-        mediaGrid.addWidget(vProgress, 8, 2, 1, 6)
+        mediaGrid.addWidget(vProgress, 7, 0, 1, 12)
         mediaGrid.addWidget(volume, 8, 9, 1, 3)
 
         mediaWidget = QTPieWidget()
