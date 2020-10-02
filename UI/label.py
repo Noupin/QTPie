@@ -36,8 +36,7 @@ class QTPieLabel(QtWidgets.QLabel):
         self.filename = filename
         self.pixelMap = None
 
-        if dropArea:
-            self.setAcceptDrops(True)
+        self.setAcceptDrops(dropArea)
     
     def dragEnterEvent(self, event):
         """
@@ -46,7 +45,7 @@ class QTPieLabel(QtWidgets.QLabel):
         Args:\n
             event (PyQt5.QtGui.QDragEnterEvent): Data held with the object being dragged
         
-        Returns:
+        Returns:\n
             PyQt5.QtGui.QDragEnterEvent: Continues the original PyQt5 dragEnterEvent code.
         """
 
@@ -64,16 +63,16 @@ class QTPieLabel(QtWidgets.QLabel):
         Args:\n
             event (PyQt5.QtGui.QDragDropEvent): Data held with the object being dropped
         
-        Returns:
+        Returns:\n
             PyQt5.QtGui.QDragDropEvent: Continues the original PyQt5 dropEvent code.
         """
 
         if self.isImage and event.mimeData().text()[8:].lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp')):
             self.filename = event.mimeData().text()[8:]
-            self.pixelMap = self.pixelMap.fromImage(PyQt5.QtGui.QImage(event.mimeData().text()[8:]))
+            self.pixelMap = self.pixelMap.fromImage(PyQt5.QtGui.QImage(self.filename))
             self.pixelMap = self.pixelMap.scaled(self.size(), PyQt5.QtCore.Qt.KeepAspectRatio)
             self.setPixmap(self.pixelMap)
-        elif not self.isImage:
+        elif not self.isVideo:
             self.setText(event.mimeData().text())
         
         return super().dropEvent(event)

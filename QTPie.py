@@ -301,54 +301,56 @@ class QTPie:
             QTPieVideo: A PyQt5 media player
         """
 
+        mediaWidget = QTPieWidget(isVideo=True)
+        mediaWidget.setObjectName("VideoControls")
+        mediaWidget.setMouseTracking(True)
+        mediaWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+
         #Making video output
-        video = QTPieVideo()
-        video.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        mediaWidget.video = QTPieVideo()
+        mediaWidget.video.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
         #Making media controller
-        media = QTPieMedia()
-        media.setMedia(PyQt5.QtMultimedia.QMediaContent(PyQt5.QtCore.QUrl.fromLocalFile(filename)))
-        media.setVideoOutput(video)
-        media.setVolume(self.tunableDict["volume"])
-        media.setObjectName(name)
+        mediaWidget.media = QTPieMedia()
+        mediaWidget.media.setMedia(PyQt5.QtMultimedia.QMediaContent(PyQt5.QtCore.QUrl.fromLocalFile(filename)))
+        mediaWidget.media.setVideoOutput(mediaWidget.video)
+        mediaWidget.media.setVolume(self.tunableDict["volume"])
+        mediaWidget.media.setObjectName(name)
 
-        playPause = self.makePlayPause(media)
-        volume = self.makeVolume(media)
-        vProgress = self.makeVProgressBar(media)
+        #Making controls for the mediaWidget
+        playPause = self.makePlayPause(mediaWidget.media)
+        volume = self.makeVolume(mediaWidget.media)
+        vProgress = self.makeVProgressBar(mediaWidget.media)
 
-        vidControls = [playPause, volume, vProgress]
+        mediaWidget.controls = [playPause, volume, vProgress]
+        self.actions.hideControls(mediaWidget.controls)
 
-        self.actions.showControls(vidControls)
-
-        mediaGrid = QtWidgets.QGridLayout()
-        mediaGrid.setObjectName("VideoControls")
-        mediaGrid.setSpacing(0)
-        mediaGrid.setContentsMargins(0, 0, 0, 0)
+        #Setting up resizable grid for the mediaWidget
+        mediaWidget.grid = QtWidgets.QGridLayout()
+        mediaWidget.grid.setObjectName("VideoControls")
+        mediaWidget.grid.setSpacing(0)
+        mediaWidget.grid.setContentsMargins(0, 0, 0, 0)
 
         mediaGridCount = 0
-        for _ in range(1):
-            self.addGridRow(mediaGrid, mediaGridCount)
-            mediaGridCount += 1
+        self.addGridRow(mediaWidget.grid, mediaWidget.gridCount)
+        mediaGridCount += 1
         
-        mediaGrid.addWidget(video, 0, 0, 9, 12)
-        mediaGrid.addWidget(playPause, 8, 0, 1, 1)
-        mediaGrid.addWidget(vProgress, 7, 0, 1, 12)
-        mediaGrid.addWidget(volume, 8, 9, 1, 3)
+        mediaWidget.grid.addWidget(mediaWidget.video, 0, 0, 9, 12)
+        mediaWidget.grid.addWidget(mediaWidget.controls[0], 8, 0, 1, 1)
+        mediaWidget.grid.addWidget(mediaWidget.controls[1], 8, 9, 1, 3)
+        mediaWidget.grid.addWidget(mediaWidget.controls[2], 7, 0, 1, 12)
 
-        mediaWidget = QTPieWidget()
-        mediaWidget.setObjectName("VideoControls")
-        mediaWidget.setLayout(mediaGrid)
-        mediaWidget.setMouseTracking(True)
-        mediaWidget.clicked.connect(lambda: self.actions.playPause(media, playPause, self.app))
-        mediaWidget.mouseEnter.connect(lambda: self.actions.showControls(vidControls))
-        mediaWidget.mouseLeave.connect(lambda: self.actions.hideControls(vidControls))
-        mediaWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        #Finalizing the mediaWidget and connecting actions
+        mediaWidget.setLayout(mediaWidget.grid)
+        mediaWidget.clicked.connect(lambda: self.actions.playPause(mediaWidget.media, playPause, self.app))
+        mediaWidget.mouseEnter.connect(lambda: self.actions.showControls(mediaWidget.controls))
+        mediaWidget.mouseLeave.connect(lambda: self.actions.hideControls(mediaWidget.controls))
 
         self.grid.addWidget(mediaWidget, gridData[1], gridData[0], gridData[3], gridData[2])
         
-        media.play()
+        mediaWidget.media.play()
 
-        return media
+        return mediaWidget
     
     def addProgressBar(self, gridData, name=""):
         """

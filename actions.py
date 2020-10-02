@@ -124,6 +124,10 @@ class Actions:
         """
 
         controller.setValue(media.position())
+
+        #Enables autoplay of video
+        if (media.position() >= controller.maximum()) and not media.paused():
+            media.play()
     
     def durationChanged(self, media, controller):
         """
