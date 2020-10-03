@@ -14,8 +14,8 @@ parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 sys.path.insert(0, parent_dir_path)
 
 #First Party Imports
-from QTPie import QTPie
 from ui import UI
+from QTPie import QTPie
 from tunable import Tunable
 
 

@@ -19,17 +19,26 @@ class QTPieButton(QtWidgets.QPushButton):
         QtWidgets (PyQt5.QtWidgets.QPushButton): Inherits from QPushButton
     """
 
-    def __init__(self, parent=None, dropArea=False):
+    mouseEnter = QtCore.pyqtSignal()
+    mouseLeave = QtCore.pyqtSignal()
+
+    def __init__(self, parent=None, dropArea=False, hover=False):
         """
         Initializes the super class
 
         Args:\n
             parent (PyQt5.QtWidgets.*): The object to put the widget on. Defaults to None.
             dropArea (bool, optional): Enables or disables drag and drop. Defaults to False.
+            hover (bool, optional): Enables or disables hovering signals. Defaults to False.
         """
 
         super().__init__(parent)
-        if dropArea:
+
+        self.hover = hover
+        self.dropArea = dropArea
+        self.mouseOn = False
+
+        if self.dropArea:
             self.setAcceptDrops(True)
     
     def dragEnterEvent(self, event):
@@ -45,6 +54,8 @@ class QTPieButton(QtWidgets.QPushButton):
         else:
             event.ignore()
 
+        return super(QTPieButton, self).dragEnterEvent(event)
+
     def dropEvent(self, event):
         """
         Triggers when dropped on
@@ -54,3 +65,35 @@ class QTPieButton(QtWidgets.QPushButton):
         """
 
         self.setText(event.mimeData().text())
+
+        return super(QTPieButton, self).dropEvent(event)
+    
+    def enterEvent(self, event):
+        """
+        Triggers when the mouse enters the QTPieWidget
+
+        Args:\n
+            event (PyQt5.QtGui.QEnterEvent): The PyQt5 mouse enter event
+        """
+
+        self.mouseOn = True
+
+        if self.hover:
+            self.mouseEnter.emit()
+
+        return super(QTPieButton, self).enterEvent(event)
+    
+    def leaveEvent(self, event):
+        """
+        Triggers when the mouse leaves the QTPieWidget
+
+        Args:\n
+            event (PyQt5.QtGui.QEnterEvent): The PyQt5 mouse leave event
+        """
+
+        self.mouseOn = False
+
+        if self.hover:
+            self.mouseLeave.emit()
+
+        return super(QTPieButton, self).leaveEvent(event)

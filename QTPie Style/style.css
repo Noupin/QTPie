@@ -8,7 +8,7 @@ QWidget{
     background-color:  #ececec;
 }
 QWidget#VideoControls{
-    background-color:rgb(109, 17, 17);
+    background-color:rgba(0, 0, 0, 0);
 }
 
 /*Grid Layout*/
@@ -125,14 +125,4 @@ QScrollArea{
 /*Dial*/
 QDial{
     background-color: #ececec;
-}
-
-/*Video*/
-QVideoWidget{
-    background-color: rgba(0, 0, 0, 0);
-}
-
-/*Media*/
-QMediaPlayer{
-    background-color: rgba(0, 0, 0, 0);
 }

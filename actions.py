@@ -30,7 +30,6 @@ class Actions:
         """
 
         filename, _ = QtWidgets.QFileDialog.getOpenFileName()
-        print(filename)
     
     def load(self):
         """
@@ -76,38 +75,51 @@ class Actions:
         utilities.changeJSON("windowWidth", width)
         utilities.changeJSON("windowHeight", height)
     
-    def playPause(self, media, button, app):
+    def playPause(self, mediaWidget, app):
         """
         Swaps the play pause state of the media
 
-        Args:
-            media (QTPieMeida): The media player that holds media
+        Args:\n
+            mediaWidget (QTPieWidget): The widget that holds all media player widgets.
+            app (PyQt5.QtWidgets.QApplication): The application to change icons
         """
 
-        if media.playing:
-            media.pause()
-            button.setIcon(app.style().standardIcon(PyQt5.QtWidgets.QStyle.SP_MediaPlay))
+        if mediaWidget.media.playing:
+            mediaWidget.media.pause()
+            mediaWidget.playPause.setIcon(app.style().standardIcon(PyQt5.QtWidgets.QStyle.SP_MediaPlay))
         else:
-            media.play()
-            button.setIcon(app.style().standardIcon(PyQt5.QtWidgets.QStyle.SP_MediaPause))
+            mediaWidget.media.play()
+            mediaWidget.playPause.setIcon(app.style().standardIcon(PyQt5.QtWidgets.QStyle.SP_MediaPause))
     
-    def changeVolume(self, media, controller):
+    def changeVolume(self, media, controller, button, app, tunableDict):
         """
         Changes the volume given a 1-100 value from the controller
 
-        Args:
+        Args:\n
             media (QTPieMeida): The media player that holds media
             controller (QTPieSlider or QTPieDial): Controls the volume from 0-100 values
+            button (QTPieButton): The volume button
+            app (PyQt5.QtWidgets.QApplication): The application to change icons
+            tunableDict (JSON): The tunable variables for the application
         """
 
+        #media.setMuted(False)
         media.setVolume(controller.value())
         utilities.changeJSON("volume", controller.value())
+
+        if media.volume() == 0:
+            media.setMuted(True)
+            button.setIcon(app.style().standardIcon(PyQt5.QtWidgets.QStyle.SP_MediaVolumeMuted))
+        else:
+            media.setMuted(False)
+            tunableDict["volume"] = controller.value()
+            button.setIcon(app.style().standardIcon(PyQt5.QtWidgets.QStyle.SP_MediaVolume))
     
     def changeTimestamp(self, media, controller):
         """
         Changes the timestamp given a 1-100 value from the controller
 
-        Args:
+        Args:\n
             media (QTPieMeida): The media player that holds media
             controller (QTPieSlider or QTPieDial): Controls the videos position from 0-duration values
         """
@@ -118,7 +130,7 @@ class Actions:
         """
         Changes the controller when the timestamp changes
 
-        Args:
+        Args:\n
             media (QTPieMeida): The media player that holds media
             controller (QTPieSlider or QTPieDial): Controls the videos position from 0-duration values
         """
@@ -126,14 +138,14 @@ class Actions:
         controller.setValue(media.position())
 
         #Enables autoplay of video
-        if (media.position() >= controller.maximum()) and not media.paused():
+        if (media.position() >= controller.maximum()) and not media.paused:
             media.play()
     
     def durationChanged(self, media, controller):
         """
         Changes the controller when the timestamp changes
 
-        Args:
+        Args:\n
             media (QTPieMeida): The media player that holds media
             controller (QTPieSlider or QTPieDial): Controls the videos position from 0-duration values
         """
@@ -144,7 +156,7 @@ class Actions:
         """
         Enables the playPause, volume, and progress widgets passed
 
-        Args:
+        Args:\n
             controls (List of QTPieMedia Controls): A list of QTPieButtons, QTPieSliders or QTPieDial
         """
 
@@ -155,9 +167,63 @@ class Actions:
         """
         Enables the playPause, volume, and progress widgets passed
 
-        Args:
+        Args:\n
             controls (List of QTPieMedia Controls): A list of QTPieButtons, QTPieSliders or QTPieDial
         """
 
         for _ in controls:
             _.setHidden(True)
+    
+    def openFile(self, media):
+        """
+        Opens a new file and plays the media
+
+        Args:\n
+            media (QTPieMeida): The media player that holds media
+        """
+
+        filename, _ = QtWidgets.QFileDialog.getOpenFileName()
+
+        if filename.lower().endswith(('.mp4', '.avi')):
+            media.setMedia(PyQt5.QtMultimedia.QMediaContent(PyQt5.QtCore.QUrl.fromLocalFile(filename)))
+            media.play()
+
+    def muteUnmute(self, mediaWidget, app, tunableDict):
+        """
+        Swaps the mute state of the media
+
+        Args:\n
+            mediaWidget (QTPieWidget): The widget that holds all media player widgets.
+            app (PyQt5.QtWidgets.QApplication): The application to change icons
+            tunableDict (JSON): The tunable variables for the application
+        """
+
+        if not mediaWidget.media.isMuted():
+            mediaWidget.media.setMuted(True)
+            mediaWidget.volumeBar.setValue(0)
+            mediaWidget.volumeBtn.setIcon(app.style().standardIcon(PyQt5.QtWidgets.QStyle.SP_MediaVolumeMuted))
+        else:
+            mediaWidget.media.setMuted(False)
+            mediaWidget.volumeBar.setValue(tunableDict["volume"])
+            mediaWidget.volumeBtn.setIcon(app.style().standardIcon(PyQt5.QtWidgets.QStyle.SP_MediaVolume))
+
+    def volumeHover(self, mediaWidget):
+        """
+        shows the volume slider bar when hovering over the volume button
+
+        Args:\n
+            mediaWidget (QTPieWidget): The widget that holds all media player widgets.
+        """
+
+        mediaWidget.volumeBar.show()
+    
+    def volumeUnhover(self, mediaWidget):
+        """
+        shows the volume slider bar when hovering over the volume button
+
+        Args:\n
+            mediaWidget (QTPieWidget): The widget that holds all media player widgets.
+        """
+
+        if not mediaWidget.volumeBar.mouseOn:
+            mediaWidget.volumeBar.hide()

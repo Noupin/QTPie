@@ -28,3 +28,29 @@ class QTPieSlider(QtWidgets.QSlider):
         """
 
         super().__init__(parent)
+
+        self.mouseOn = False
+    
+    def enterEvent(self, event):
+        """
+        Triggers when the mouse enters the QTPieSlider
+
+        Args:\n
+            event (PyQt5.QtGui.QEnterEvent): The PyQt5 mouse enter event
+        """
+
+        self.mouseOn = True
+
+        return super(QTPieSlider, self).enterEvent(event)
+    
+    def leaveEvent(self, event):
+        """
+        Triggers when the mouse leaves the QTPieSlider
+
+        Args:\n
+            event (PyQt5.QtGui.QEnterEvent): The PyQt5 mouse leave event
+        """
+
+        self.mouseOn = False
+
+        return super(QTPieSlider, self).leaveEvent(event)

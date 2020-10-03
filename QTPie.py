@@ -18,23 +18,23 @@ sys.path.insert(0, parent_dir_path)
 
 #First Party Imports
 import utilities
-from tunable import Tunable
 from actions import Actions
+from tunable import Tunable
+from UI.dial import QTPieDial
+from UI.label import QTPieLabel
+from UI.media import QTPieMedia
+from UI.video import QTPieVideo
 from UI.window import QTPieWindow
 from UI.widget import QTPieWidget
 from UI.button import QTPieButton
-from UI.label import QTPieLabel
 from UI.pixmap import QTPiePixmap
 from UI.slider import QTPieSlider
+from UI.textbox import QTPieTextbox
+from UI.checkbox import QTPieCheckbox
+from UI.dropdown import QTPieDropdown
+from UI.scrollArea import QTPieScroll
 from UI.progressBar import QTPieProgressBar
 from UI.radioButton import QTPieRadioButton
-from UI.checkbox import QTPieCheckbox
-from UI.textbox import QTPieTextbox
-from UI.media import QTPieMedia
-from UI.video import QTPieVideo
-from UI.scrollArea import QTPieScroll
-from UI.dial import QTPieDial
-from UI.dropdown import QTPieDropdown
 
 
 class QTPie:
@@ -132,7 +132,7 @@ class QTPie:
         """
         Adds a row to the given grid on the count
 
-        Args:
+        Args:\n
             grid (PyQt5.QtWidgets.QGridLayout): A grid with count amount of rows
             count (int): The current amount of rows the grid being passed in has
         """
@@ -220,25 +220,46 @@ class QTPie:
 
         return image
 
-    def makePlayPause(self, media):
+    def makeButton(self, clickAction, mouseEnterAction=None, mouseLeaveAction=None, name="", txt="Button", icon="", enableDrop=False, enableHover=False):
         """
-        Create a play pause button for a given media to be put on a given parent
+        Combines the basic Button code into one function with added functionality and support for css syntax
 
         Args:\n
-            media (QTPieMedia): The holder of a type of media
-            parent (QTPieScrollArea or QTPieWidget): The widget for the button to be placed on
+            clickAction (def): The function to be called on click.
+            mouseEnterAction (def, optional): The function to be called on the mouse entering the button. Defaults to None.
+            mouseLeaveAction (def): The function to be called on the mouse leaving the button. Defaults to None.
+            name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
+            txt (str, optional): The text the be displayed. Defaults to "Button".
+            icon (str, optional): The string corresponding to an icon. Defaults to "".
+            enableDrop (bool, optional): Determines whether drag and drop is enabled. Defaults to False.
+            enableHover (bool, optional): Determines whether hovering signals are enabled. Defaults to False.
 
         Returns:\n
-            QTPieButton: An extension of the PyQt5 QPushButton
+            QTPieButton: A PyQt5 push button
         """
 
-        playPause = QTPieButton()
-        playPause.setObjectName("VideoPlayPause")
-        playPause.setIcon(self.app.style().standardIcon(PyQt5.QtWidgets.QStyle.SP_MediaPause))
-        playPause.clicked.connect(lambda: self.actions.playPause(media, playPause, self.app))
-        playPause.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        icons = {"play": PyQt5.QtWidgets.QStyle.SP_MediaPlay,
+                 "pause": PyQt5.QtWidgets.QStyle.SP_MediaPause,
+                 "file": PyQt5.QtWidgets.QStyle.SP_DialogOpenButton,
+                 "volume": PyQt5.QtWidgets.QStyle.SP_MediaVolume,
+                 "muted": PyQt5.QtWidgets.QStyle.SP_MediaVolumeMuted}
 
-        return playPause
+        btn = QTPieButton(dropArea=enableDrop, hover=enableHover)
+        btn.setObjectName(name)
+        if icon in icons:
+            btn.setIcon(self.app.style().standardIcon(icons[icon]))
+        else:
+            btn.setText(txt)
+        btn.clicked.connect(clickAction)
+        if mouseEnterAction:
+            btn.hover = enableHover
+            btn.mouseEnter.connect(mouseEnterAction)
+        if mouseLeaveAction:
+            btn.hover = enableHover
+            btn.mouseLeave.connect(mouseLeaveAction)
+        btn.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+
+        return btn 
 
     def makeVolume(self, media):
         """
@@ -257,8 +278,8 @@ class QTPie:
         volume.setOrientation(QtCore.Qt.Horizontal)
         volume.setMinimum(0)
         volume.setMaximum(100)
-        volume.valueChanged.connect(lambda: self.actions.changeVolume(media, volume))
-        volume.setValue(media.volume())
+        volume.valueChanged.connect(lambda: self.actions.changeVolume(media.media, volume, media.volumeBtn, self.app, self.tunableDict))
+        volume.setValue(media.media.volume())
         volume.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
         return volume
@@ -301,7 +322,7 @@ class QTPie:
             QTPieVideo: A PyQt5 media player
         """
 
-        mediaWidget = QTPieWidget(isVideo=True)
+        mediaWidget = QTPieWidget(doesSignal=True)
         mediaWidget.setObjectName("VideoControls")
         mediaWidget.setMouseTracking(True)
         mediaWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
@@ -318,12 +339,15 @@ class QTPie:
         mediaWidget.media.setObjectName(name)
 
         #Making controls for the mediaWidget
-        playPause = self.makePlayPause(mediaWidget.media)
-        volume = self.makeVolume(mediaWidget.media)
-        vProgress = self.makeVProgressBar(mediaWidget.media)
-
-        mediaWidget.controls = [playPause, volume, vProgress]
-        self.actions.hideControls(mediaWidget.controls)
+        mediaWidget.playPause = self.makeButton(lambda: self.actions.playPause(mediaWidget, self.app), name="VideoPlayPause", icon="pause")
+        mediaWidget.volumeBtn = self.makeButton(lambda: self.actions.muteUnmute(mediaWidget, self.app, self.tunableDict),
+                                                lambda: self.actions.volumeHover(mediaWidget),
+                                                lambda: self.actions.volumeUnhover(mediaWidget),
+                                                name="VideoVolumeBtn", icon="volume", enableHover=True)
+        mediaWidget.volumeBar = self.makeVolume(mediaWidget)
+        mediaWidget.openFile = self.makeButton(lambda: self.actions.openFile(mediaWidget.media), name="VideoOpenFile", icon="file")
+        mediaWidget.vProgress = self.makeVProgressBar(mediaWidget.media)
+        mediaWidget.updateControls()
 
         #Setting up resizable grid for the mediaWidget
         mediaWidget.grid = QtWidgets.QGridLayout()
@@ -336,18 +360,21 @@ class QTPie:
         mediaGridCount += 1
         
         mediaWidget.grid.addWidget(mediaWidget.video, 0, 0, 9, 12)
-        mediaWidget.grid.addWidget(mediaWidget.controls[0], 8, 0, 1, 1)
-        mediaWidget.grid.addWidget(mediaWidget.controls[1], 8, 9, 1, 3)
-        mediaWidget.grid.addWidget(mediaWidget.controls[2], 7, 0, 1, 12)
+        mediaWidget.grid.addWidget(mediaWidget.playPause, 8, 0, 1, 1)
+        mediaWidget.grid.addWidget(mediaWidget.volumeBtn, 8, 1, 1, 1)
+        mediaWidget.grid.addWidget(mediaWidget.volumeBar, 8, 2, 1, 3)
+        mediaWidget.grid.addWidget(mediaWidget.openFile, 8, 11, 1, 1)
+        mediaWidget.grid.addWidget(mediaWidget.vProgress, 7, 0, 1, 12)
 
         #Finalizing the mediaWidget and connecting actions
         mediaWidget.setLayout(mediaWidget.grid)
-        mediaWidget.clicked.connect(lambda: self.actions.playPause(mediaWidget.media, playPause, self.app))
+        mediaWidget.clicked.connect(lambda: self.actions.playPause(mediaWidget, self.app))
         mediaWidget.mouseEnter.connect(lambda: self.actions.showControls(mediaWidget.controls))
         mediaWidget.mouseLeave.connect(lambda: self.actions.hideControls(mediaWidget.controls))
 
         self.grid.addWidget(mediaWidget, gridData[1], gridData[0], gridData[3], gridData[2])
         
+        self.actions.hideControls(mediaWidget.controls)
         mediaWidget.media.play()
 
         return mediaWidget

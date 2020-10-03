@@ -24,25 +24,32 @@ class QTPieWidget(QtWidgets.QWidget):
     mouseEnter = QtCore.pyqtSignal()
     mouseLeave = QtCore.pyqtSignal()
 
-    def __init__(self, parent=None, isVideo=False):
+    def __init__(self, parent=None, doesSignal=False):
         """
         Initializes the super class
 
         Args:\n
             parent (PyQt5.QtWidgets.*): The object to put the widget on. Defaults to None.
+            isVideo (bool, optional): Determines whether the video attributes will be used. Defaults to False.
         """
 
         super().__init__(parent)
 
-        self.isVideo = isVideo
+        self.doesSignal = doesSignal
         self.grid = None
         self.gridCount = 0
         self.media = None
         self.video = None
         self.filename = ""
-        self.controls = []
+        self.playPause = None
+        self.volumeWidget = None
+        self.volumeBtn = None
+        self.volumeBar = None
+        self.openFile = None
+        self.vProgress = None
+        self.controls = [self.playPause, self.volumeWidget, self.openFile, self.vProgress]
 
-        self.setAcceptDrops(self.isVideo)
+        self.setAcceptDrops(self.doesSignal)
     
     def resizeEvent(self, event):
         """
@@ -64,7 +71,7 @@ class QTPieWidget(QtWidgets.QWidget):
             event (PyQt5.QtGui.QMousePressEvent): The PyQt5 mouse press event
         """
 
-        if self.isVideo:
+        if self.doesSignal:
             self.clicked.emit()
 
         return super(QTPieWidget, self).mousePressEvent(event)
@@ -77,7 +84,7 @@ class QTPieWidget(QtWidgets.QWidget):
             event (PyQt5.QtGui.QEnterEvent): The PyQt5 mouse enter event
         """
 
-        if self.isVideo:
+        if self.doesSignal:
             self.mouseEnter.emit()
 
         return super(QTPieWidget, self).enterEvent(event)
@@ -90,7 +97,7 @@ class QTPieWidget(QtWidgets.QWidget):
             event (PyQt5.QtGui.QEnterEvent): The PyQt5 mouse leave event
         """
 
-        if self.isVideo:
+        if self.doesSignal:
             self.mouseLeave.emit()
 
         return super(QTPieWidget, self).leaveEvent(event)
@@ -124,9 +131,16 @@ class QTPieWidget(QtWidgets.QWidget):
             PyQt5.QtGui.QDragDropEvent: Continues the original PyQt5 dropEvent code.
         """
 
-        if self.isVideo and event.mimeData().text()[8:].lower().endswith(('.mp4', '.avi')):
+        if self.doesSignal and event.mimeData().text()[8:].lower().endswith(('.mp4', '.avi')):
             self.filename = event.mimeData().text()[8:]
             self.media.setMedia(PyQt5.QtMultimedia.QMediaContent(PyQt5.QtCore.QUrl.fromLocalFile(self.filename)))
             self.media.play()
         
         return super(QTPieWidget, self).dropEvent(event)
+    
+    def updateControls(self):
+        """
+        Updates the items in the controls list
+        """
+
+        self.controls = [self.playPause, self.volumeBtn, self.openFile, self.vProgress]
