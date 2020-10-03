@@ -188,7 +188,7 @@ class Actions:
             media.setMedia(PyQt5.QtMultimedia.QMediaContent(PyQt5.QtCore.QUrl.fromLocalFile(filename)))
             media.play()
 
-    def muteUnmute(self, mediaWidget, app, tunableDict):
+    def muteUnmute(self, mediaWidget, volumeWidget, app, tunableDict):
         """
         Swaps the mute state of the media
 
@@ -200,12 +200,12 @@ class Actions:
 
         if not mediaWidget.media.isMuted():
             mediaWidget.media.setMuted(True)
-            mediaWidget.volumeBar.setValue(0)
-            mediaWidget.volumeBtn.setIcon(app.style().standardIcon(PyQt5.QtWidgets.QStyle.SP_MediaVolumeMuted))
+            volumeWidget.volumeBar.setValue(0)
+            volumeWidget.volumeBtn.setIcon(app.style().standardIcon(PyQt5.QtWidgets.QStyle.SP_MediaVolumeMuted))
         else:
             mediaWidget.media.setMuted(False)
-            mediaWidget.volumeBar.setValue(tunableDict["volume"])
-            mediaWidget.volumeBtn.setIcon(app.style().standardIcon(PyQt5.QtWidgets.QStyle.SP_MediaVolume))
+            volumeWidget.volumeBar.setValue(tunableDict["volume"])
+            volumeWidget.volumeBtn.setIcon(app.style().standardIcon(PyQt5.QtWidgets.QStyle.SP_MediaVolume))
 
     def volumeHover(self, mediaWidget):
         """

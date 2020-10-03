@@ -143,4 +143,4 @@ class QTPieWidget(QtWidgets.QWidget):
         Updates the items in the controls list
         """
 
-        self.controls = [self.playPause, self.volumeBtn, self.openFile, self.vProgress]
+        self.controls = [self.playPause, self.volumeWidget, self.openFile, self.vProgress]
