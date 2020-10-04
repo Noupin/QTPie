@@ -152,26 +152,29 @@ class Actions:
 
         controller.setRange(0, media.duration())
     
-    def showControls(self, controls):
+    def showControls(self, mediaWidget):
         """
         Enables the playPause, volume, and progress widgets passed
 
         Args:\n
-            controls (List of QTPieMedia Controls): A list of QTPieButtons, QTPieSliders or QTPieDial
+            mediaWidget (QTPieWidget): The widget that holds all media player widgets.
         """
 
-        for _ in controls:
+        for _ in mediaWidget.controls:
             _.setHidden(False)
     
-    def hideControls(self, controls):
+    def hideControls(self, mediaWidget):
         """
         Enables the playPause, volume, and progress widgets passed
 
         Args:\n
-            controls (List of QTPieMedia Controls): A list of QTPieButtons, QTPieSliders or QTPieDial
+            mediaWidget (QTPieWidget): The widget that holds all media player widgets.
         """
 
-        for _ in controls:
+        if mediaWidget.media.paused:
+            return
+
+        for _ in mediaWidget.controls:
             _.setHidden(True)
     
     def openFile(self, media):

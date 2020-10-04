@@ -361,15 +361,15 @@ class QTPie:
         volumeWidget.mouseLeave.connect(lambda: self.actions.volumeUnhover(volumeWidget))
 
         volumeWidget.grid.addWidget(volumeWidget.volumeBtn, 0, 0, 1, 1)
-        volumeWidget.grid.addWidget(volumeWidget.volumeBar, 0, 1, 1, 6)
+        volumeWidget.grid.addWidget(volumeWidget.volumeBar, 0, 1, 1, 5)
 
         volumeWidget.setLayout(volumeWidget.grid)
+        volumeWidget.volumeBar.hide()
 
         mediaWidget.volumeWidget = volumeWidget
         mediaWidget.openFile = self.makeButton(lambda: self.actions.openFile(mediaWidget.media), name="VideoOpenFile", icon="file")
         mediaWidget.vProgress = self.makeVProgressBar(mediaWidget.media)
         mediaWidget.updateControls()
-        #mediaWidget.volume.hide()
 
         #Setting up resizable grid for the mediaWidget
         mediaWidget.grid = QtWidgets.QGridLayout()
@@ -391,12 +391,12 @@ class QTPie:
         #Finalizing the mediaWidget and connecting actions
         mediaWidget.setLayout(mediaWidget.grid)
         mediaWidget.clicked.connect(lambda: self.actions.playPause(mediaWidget, self.app))
-        mediaWidget.mouseEnter.connect(lambda: self.actions.showControls(mediaWidget.controls))
-        mediaWidget.mouseLeave.connect(lambda: self.actions.hideControls(mediaWidget.controls))
+        mediaWidget.mouseEnter.connect(lambda: self.actions.showControls(mediaWidget))
+        mediaWidget.mouseLeave.connect(lambda: self.actions.hideControls(mediaWidget))
 
         self.grid.addWidget(mediaWidget, gridData[1], gridData[0], gridData[3], gridData[2])
         
-        self.actions.hideControls(mediaWidget.controls)
+        self.actions.hideControls(mediaWidget)
         mediaWidget.media.play()
 
         return mediaWidget
