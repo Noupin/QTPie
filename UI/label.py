@@ -72,7 +72,7 @@ class QTPieLabel(QtWidgets.QLabel):
             self.pixelMap = self.pixelMap.fromImage(PyQt5.QtGui.QImage(self.filename))
             self.pixelMap = self.pixelMap.scaled(self.size(), PyQt5.QtCore.Qt.KeepAspectRatio)
             self.setPixmap(self.pixelMap)
-        elif not self.isVideo:
+        elif not self.isImage:
             self.setText(event.mimeData().text())
         
         return super().dropEvent(event)

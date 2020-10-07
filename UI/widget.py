@@ -36,18 +36,26 @@ class QTPieWidget(QtWidgets.QWidget):
         super().__init__(parent)
 
         self.doesSignal = doesSignal
+
+        #Grid varibles for the widget
         self.grid = None
         self.gridCount = 0
+
+        #Media variables for the widget
         self.media = None
         self.video = None
         self.filename = ""
+
+        #Control variables for the widget
         self.playPause = None
         self.volumeWidget = None
         self.volumeBtn = None
         self.volumeBar = None
         self.openFile = None
         self.vProgress = None
+
         self.controls = [self.playPause, self.volumeWidget, self.openFile, self.vProgress]
+        self.subWidgets = {}
 
         self.setAcceptDrops(self.doesSignal)
     
@@ -131,7 +139,7 @@ class QTPieWidget(QtWidgets.QWidget):
             PyQt5.QtGui.QDragDropEvent: Continues the original PyQt5 dropEvent code.
         """
 
-        if self.doesSignal and event.mimeData().text()[8:].lower().endswith(('.mp4', '.avi')):
+        if self.doesSignal and event.mimeData().text()[8:].lower().endswith(('.mp4', '.avi', '.m4v')):
             self.filename = event.mimeData().text()[8:]
             self.media.setMedia(PyQt5.QtMultimedia.QMediaContent(PyQt5.QtCore.QUrl.fromLocalFile(self.filename)))
             self.media.play()

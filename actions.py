@@ -75,21 +75,22 @@ class Actions:
         utilities.changeJSON("windowWidth", width)
         utilities.changeJSON("windowHeight", height)
     
-    def playPause(self, mediaWidget, app):
+    def playPause(self, mediaWidget, controlWidget, app):
         """
         Swaps the play pause state of the media
 
         Args:\n
             mediaWidget (QTPieWidget): The widget that holds all media player widgets.
+            controlWidgets (QTPieWidget): The widget that holds all media player control widgets.
             app (PyQt5.QtWidgets.QApplication): The application to change icons
         """
 
         if mediaWidget.media.playing:
             mediaWidget.media.pause()
-            mediaWidget.playPause.setIcon(app.style().standardIcon(PyQt5.QtWidgets.QStyle.SP_MediaPlay))
+            controlWidget.playPause.setIcon(app.style().standardIcon(PyQt5.QtWidgets.QStyle.SP_MediaPlay))
         else:
             mediaWidget.media.play()
-            mediaWidget.playPause.setIcon(app.style().standardIcon(PyQt5.QtWidgets.QStyle.SP_MediaPause))
+            controlWidget.playPause.setIcon(app.style().standardIcon(PyQt5.QtWidgets.QStyle.SP_MediaPause))
     
     def changeVolume(self, media, controller, button, app, tunableDict):
         """
@@ -152,30 +153,29 @@ class Actions:
 
         controller.setRange(0, media.duration())
     
-    def showControls(self, mediaWidget):
+    def showControls(self, controlWidgets):
         """
         Enables the playPause, volume, and progress widgets passed
 
         Args:\n
-            mediaWidget (QTPieWidget): The widget that holds all media player widgets.
+            controlWidgets (QTPieWidget): The widget that holds all media player control widgets.
         """
 
-        for _ in mediaWidget.controls:
-            _.setHidden(False)
+        controlWidgets.setHidden(False)
     
-    def hideControls(self, mediaWidget):
+    def hideControls(self, mediaWidget, controlWidgets):
         """
         Enables the playPause, volume, and progress widgets passed
 
         Args:\n
             mediaWidget (QTPieWidget): The widget that holds all media player widgets.
+            controlWidgets (QTPieWidget): The widget that holds all media player control widgets.
         """
 
         if mediaWidget.media.paused:
             return
 
-        for _ in mediaWidget.controls:
-            _.setHidden(True)
+        controlWidgets.setHidden(True)
     
     def openFile(self, media):
         """
@@ -197,6 +197,7 @@ class Actions:
 
         Args:\n
             mediaWidget (QTPieWidget): The widget that holds all media player widgets.
+            volumeWidget (QTPieWidget): The widget that holds all media player volume widgets.
             app (PyQt5.QtWidgets.QApplication): The application to change icons
             tunableDict (JSON): The tunable variables for the application
         """

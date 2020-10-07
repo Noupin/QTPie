@@ -39,7 +39,7 @@ class UI:
         """
 
         for _ in range(12):
-            self.ui.addGridRow(self.ui.grid, self.ui.gridCount)
+            self.ui.addGridRow(self.ui.grid, self.ui.gridCount, 12)
             self.ui.gridCount += 1
         
         self.ui.createMenu()
@@ -55,8 +55,8 @@ class UI:
         self.dial = self.ui.addDial([9, 12, 3, 1], lambda: self.ui.actions.dialAndProgress(self.dial, self.progressBar))
         self.text = self.ui.addTextbox([0, 3, 6, 1], align="center")
         self.autoBox = self.ui.addDropdown([6, 3, 6, 1], align="center", values=["hi", "hello", "test"], textEdit=True)
-        self.image = self.ui.addImage([3, 4, 6, 3], keepAR=True, enableDrop=True)
-        self.video = self.ui.addVideo([3, 7, 6, 3])
+        #self.image = self.ui.addImage([3, 4, 6, 3], keepAR=True, enableDrop=True)
+        self.video = self.ui.addVideo([3, 4, 6, 6])
 
         self.ui.mainWindow.show()
         sys.exit(self.ui.app.exec_())

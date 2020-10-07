@@ -7,16 +7,8 @@ QMainWindow{
 QWidget{
     background-color:  #ececec;
 }
-QWidget#VideoControls{
-    background-color:rgba(0, 0, 0, 0);
-}
-
-/*Grid Layout*/
-QGridLayout{
-    background-color:rgba(0, 0, 0, 0);
-}
-QGridLayout#VideoControls{
-    background-color:rgba(0, 0, 0, 0)
+QWidget#mediaPlayerControls{
+    background-color: green;
 }
 
 /*Label*/
@@ -32,7 +24,7 @@ QLabel#Spacer{
 
 /*Push Button*/
 QPushButton {
-    background-color: rgba(0, 0, 0, 0);
+    background-color: transparent;
     border-radius: 6px;
 }
 QPushButton#maleBtn{
@@ -43,9 +35,6 @@ QPushButton#femaleBtn{
 }
 QPushButton:pressed{
     border: 1px solid #cecece;
-}
-QPushButton#VideoPlayPause{
-    background-color: rgba(0, 0, 0, 0);
 }
 
 /*Progress Bar*/
@@ -73,37 +62,37 @@ QComboBox{
 QSlider{
     background-color: rgba(0, 0, 0, 0);
 }
-QSlider::groove:horizontal {
+QSlider::groove:horizontal{
     background-color: #e7e7e7;
-	border: 0px; 
-	height: 10px; 
-	border-radius: 5px;
-}
-QSlider::handle:horizontal { 
-	background-color: #ececec; 
-	border: 2px solid #cecece; 
-	width: 16px; 
-	height: 20px; 
-	margin-top: -5px; 
-    margin-bottom: -5px;
     margin-left: 0px;
     margin-right: 0px;
-	border-radius: 10px; 
+	border: 0px; 
+	height: 6px; 
+	border-radius: 2px;
 }
-QSlider::sub-page:horizontal {
-    background-color: #ececec;
-    border: 2px solid #cecece;
+QSlider::handle:horizontal{ 
+	background-color: #ececec; 
+	border: 2px solid #cecece; 
+	width: 9px; 
+	margin-top: -3px; 
+    margin-bottom: -3px;
+    margin-left: 0px;
+    margin-right: 0px;
+	border-radius: 5px; 
+}
+QSlider::sub-page:horizontal{
+    background-color: #7e7d7d;
     height: 10px;
     margin-left: 1px;
     margin-right: 1px;
-    border-radius: 3px; /*Border radius cannot be more than the half of the height of the element*/
+    border-radius: 3px;
 }
-QSlider#VideoProgressBar::sub-page:horizontal {
+QSlider#VideoProgressBar::sub-page:horizontal{
     background-color: #d82739;
     height: 10px;
     margin-left: 1px;
     margin-right: 1px;
-    border-radius: 3px; /*Border radius cannot be more than the half of the height of the element*/
+    border-radius: 3px;
 }
 
 /*Checkbox*/

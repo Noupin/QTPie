@@ -54,7 +54,7 @@ class QTPie:
         """
 
         stylesheet = open(utilities.resource_path("QTPie Style\\style.css"), "r")
-        styling = stylesheet.read()
+        self.styling = stylesheet.read()
         stylesheet.close()
 
         self.actions = Actions()
@@ -62,7 +62,7 @@ class QTPie:
         self.tunableDict = tunableDict
 
         self.app = QtWidgets.QApplication(sys.argv)
-        self.app.setStyleSheet(styling)
+        self.app.setStyleSheet(self.styling)
         self.app.aboutToQuit.connect(lambda: self.actions.onWindowClose(self.mainWindow))
 
         if icon:
@@ -80,6 +80,7 @@ class QTPie:
         self.window.setLayout(self.grid)
 
         self.mainWindow = QTPieWindow()
+        #self.mainWindow.setWindowOpacity(.5)
         self.mainWindow.setGeometry(self.tunableDict["windowX"],
                                     self.tunableDict["windowY"],
                                     self.tunableDict["windowWidth"],
@@ -128,7 +129,7 @@ class QTPie:
         alignments = {"left": QtCore.Qt.AlignLeft, "center": QtCore.Qt.AlignCenter, "right": QtCore.Qt.AlignRight}
         widget.setAlignment(alignments[alignment])
 
-    def addGridRow(self, grid, count):
+    def addGridRow(self, grid, count, columns):
         """
         Adds a row to the given grid on the count
 
@@ -137,7 +138,7 @@ class QTPie:
             count (int): The current amount of rows the grid being passed in has
         """
 
-        for _ in range(12):
+        for _ in range(columns):
             grid.addWidget(self.space, count, _)
             grid.setColumnStretch(_, 1)
         grid.setRowStretch(count, 1)
@@ -240,7 +241,7 @@ class QTPie:
 
         icons = {"play": PyQt5.QtWidgets.QStyle.SP_MediaPlay,
                  "pause": PyQt5.QtWidgets.QStyle.SP_MediaPause,
-                 "file": PyQt5.QtWidgets.QStyle.SP_DialogOpenButton,
+                 "file": PyQt5.QtWidgets.QStyle.SP_FileLinkIcon,
                  "volume": PyQt5.QtWidgets.QStyle.SP_MediaVolume,
                  "muted": PyQt5.QtWidgets.QStyle.SP_MediaVolumeMuted}
 
@@ -322,8 +323,11 @@ class QTPie:
             QTPieVideo: A PyQt5 media player
         """
 
+        name = "mediaPlayer" + name
+
+        '''Making the widget for the media'''
         mediaWidget = QTPieWidget(doesSignal=True)
-        mediaWidget.setObjectName("VideoControls")
+        mediaWidget.setObjectName(name)
         mediaWidget.setMouseTracking(True)
         mediaWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
@@ -338,19 +342,35 @@ class QTPie:
         mediaWidget.media.setVolume(self.tunableDict["volume"])
         mediaWidget.media.setObjectName(name)
 
-        #Making controls for the mediaWidget
-        mediaWidget.playPause = self.makeButton(lambda: self.actions.playPause(mediaWidget, self.app), name="VideoPlayPause", icon="pause")
+        mediaWidget.grid = QtWidgets.QGridLayout()
+        mediaWidget.grid.setObjectName(name)
+        mediaWidget.grid.setSpacing(0)
+        mediaWidget.grid.setContentsMargins(0, 0, 0, 0)
+        self.addGridRow(mediaWidget.grid, mediaWidget.gridCount, 1)
 
+
+        '''Making the widget for the media controls'''
+        controlWidget = QTPieWidget(doesSignal=True)
+        controlWidget.setObjectName(name+"Controls")
+        controlWidget.setMouseTracking(True)
+        controlWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+
+        #Making controls for the controlWidget
+        controlWidget.playPause = self.makeButton(lambda: self.actions.playPause(mediaWidget, controlWidget, self.app), name="VideoPlayPause", icon="pause")
+        controlWidget.openFile = self.makeButton(lambda: self.actions.openFile(mediaWidget.media), name="VideoOpenFile", icon="file")
+        controlWidget.vProgress = self.makeVProgressBar(mediaWidget.media)
+
+        '''Making the widget for the volume'''
         volumeWidget = QTPieWidget(doesSignal=True)
-        volumeWidget.setObjectName("VolumeControls")
+        volumeWidget.setObjectName(name+"Volume")
         volumeWidget.setMouseTracking(True)
         volumeWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
         volumeWidget.grid = QtWidgets.QGridLayout()
-        volumeWidget.grid.setObjectName("VolumeControls")
+        volumeWidget.grid.setObjectName(name+"Volume")
         volumeWidget.grid.setSpacing(0)
         volumeWidget.grid.setContentsMargins(0, 0, 0, 0)
-        self.addGridRow(volumeWidget.grid, 0)
+        self.addGridRow(volumeWidget.grid, volumeWidget.gridCount, 6)
 
         volumeWidget.volumeBar = self.makeVolume(mediaWidget, volumeWidget)
         volumeWidget.volumeBar.valueChanged.connect(lambda: self.actions.changeVolume(mediaWidget.media, volumeWidget.volumeBar, volumeWidget.volumeBtn, self.app, self.tunableDict))
@@ -366,38 +386,34 @@ class QTPie:
         volumeWidget.setLayout(volumeWidget.grid)
         volumeWidget.volumeBar.hide()
 
-        mediaWidget.volumeWidget = volumeWidget
-        mediaWidget.openFile = self.makeButton(lambda: self.actions.openFile(mediaWidget.media), name="VideoOpenFile", icon="file")
-        mediaWidget.vProgress = self.makeVProgressBar(mediaWidget.media)
-        mediaWidget.updateControls()
+        controlWidget.volumeWidget = volumeWidget
+        controlWidget.updateControls()
 
-        #Setting up resizable grid for the mediaWidget
-        mediaWidget.grid = QtWidgets.QGridLayout()
-        mediaWidget.grid.setObjectName("VideoControls")
-        mediaWidget.grid.setSpacing(0)
-        mediaWidget.grid.setContentsMargins(0, 0, 0, 0)
+        #Setting up resizable grid for the controlWidget
+        controlWidget.grid = QtWidgets.QGridLayout()
+        controlWidget.grid.setObjectName(name+"Controls")
+        controlWidget.grid.setSpacing(0)
+        controlWidget.grid.setContentsMargins(0, 0, 0, 0)
+        self.addGridRow(controlWidget.grid, controlWidget.gridCount, 12)
 
-        mediaGridCount = 0
-        self.addGridRow(mediaWidget.grid, mediaWidget.gridCount)
-        mediaGridCount += 1
-        
-        mediaWidget.grid.addWidget(mediaWidget.video, 0, 0, 9, 12)
-        mediaWidget.grid.addWidget(mediaWidget.playPause, 8, 0, 1, 1)
-        mediaWidget.grid.addWidget(mediaWidget.volumeWidget, 8, 1, 1, 6)
-        #mediaWidget.grid.addWidget(mediaWidget.volume, 8, 2, 1, 3)
-        mediaWidget.grid.addWidget(mediaWidget.openFile, 8, 11, 1, 1)
-        mediaWidget.grid.addWidget(mediaWidget.vProgress, 7, 0, 1, 12)
+        controlWidget.grid.addWidget(controlWidget.playPause, 1, 0, 1, 1)
+        controlWidget.grid.addWidget(controlWidget.volumeWidget, 1, 1, 1, 6)
+        controlWidget.grid.addWidget(controlWidget.openFile, 1, 11, 1, 1)
+        controlWidget.grid.addWidget(controlWidget.vProgress, 0, 0, 1, 12)
 
-        #Finalizing the mediaWidget and connecting actions
+        #Finalizing the controlWidget and connecting actions
+        controlWidget.setLayout(controlWidget.grid)
+        mediaWidget.clicked.connect(lambda: self.actions.playPause(mediaWidget, controlWidget, self.app))
+        mediaWidget.mouseEnter.connect(lambda: self.actions.showControls(controlWidget))
+        mediaWidget.mouseLeave.connect(lambda: self.actions.hideControls(mediaWidget, controlWidget))
+
+        mediaWidget.grid.addWidget(mediaWidget.video, 0, 0, 2, 11)
+        mediaWidget.grid.addWidget(controlWidget, 1, 0, 1, 11)
         mediaWidget.setLayout(mediaWidget.grid)
-        mediaWidget.clicked.connect(lambda: self.actions.playPause(mediaWidget, self.app))
-        mediaWidget.mouseEnter.connect(lambda: self.actions.showControls(mediaWidget))
-        mediaWidget.mouseLeave.connect(lambda: self.actions.hideControls(mediaWidget))
-
         self.grid.addWidget(mediaWidget, gridData[1], gridData[0], gridData[3], gridData[2])
         
-        self.actions.hideControls(mediaWidget)
-        mediaWidget.media.play()
+        self.actions.hideControls(mediaWidget, controlWidget)
+        self.actions.playPause(mediaWidget, controlWidget, self.app)
 
         return mediaWidget
     
