@@ -22,7 +22,7 @@ class QTPieMediaWidget(QTPieWidget):
         QtWidgets (PyQt5.QtWidgets.QWidget): Inherits from QWidget
     """
 
-    def __init__(self, parent=None, doesSignal=False):
+    def __init__(self, parent=None, doesSignal=False, dropArea=False):
         """
         Initializes the super class
 
@@ -33,6 +33,8 @@ class QTPieMediaWidget(QTPieWidget):
 
         super().__init__(parent, doesSignal)
 
+        self.doesSignal = doesSignal
+
         #Grid varibles for the widget
         self.grid = None
         self.gridCount = 0
@@ -41,3 +43,48 @@ class QTPieMediaWidget(QTPieWidget):
         self.media = None
         self.video = None
         self.filename = ""
+
+        self.setAcceptDrops(self.doesSignal)
+    
+    def dragEnterEvent(self, event):
+        """
+        Triggers when dragged over
+
+        Args:\n
+            event (PyQt5.QtGui.QDragEnterEvent): Data held with the object being dragged
+        
+        Returns:\n
+            PyQt5.QtGui.QDragEnterEvent: Continues the original PyQt5 dragEnterEvent code.
+        """
+
+        if event.mimeData().hasText():
+            event.accept()
+        else:
+            event.ignore()
+        
+        return super(QTPieMediaWidget, self).dragEnterEvent(event)
+
+    def dropEvent(self, event):
+        """
+        Triggers when dropped on
+
+        Args:\n
+            event (PyQt5.QtGui.QDragDropEvent): Data held with the object being dropped
+        
+        Returns:\n
+            PyQt5.QtGui.QDragDropEvent: Continues the original PyQt5 dropEvent code.
+        """
+
+        if self.dropEvent and event.mimeData().text()[8:].lower().endswith(('.mp4', '.avi', '.m4v')):
+            self.filename = event.mimeData().text()[8:]
+            self.media.setMedia(PyQt5.QtMultimedia.QMediaContent(PyQt5.QtCore.QUrl.fromLocalFile(self.filename)))
+            self.media.play()
+        
+        return super(QTPieMediaWidget, self).dropEvent(event)
+    
+    def updateControls(self):
+        """
+        Updates the items in the controls list
+        """
+
+        self.controls = [self.playPause, self.volumeWidget, self.openFile, self.vProgress]

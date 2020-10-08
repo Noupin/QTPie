@@ -330,7 +330,7 @@ class QTPie:
         name = "mediaPlayer" + name
 
         '''Making the widget for the media'''
-        mediaWidget = QTPieMediaWidget(doesSignal=True)
+        mediaWidget = QTPieMediaWidget(doesSignal=True, dropArea=True)
         mediaWidget.setObjectName(name)
         mediaWidget.setMouseTracking(True)
         mediaWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
