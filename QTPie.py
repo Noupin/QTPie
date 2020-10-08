@@ -35,6 +35,9 @@ from UI.dropdown import QTPieDropdown
 from UI.scrollArea import QTPieScroll
 from UI.progressBar import QTPieProgressBar
 from UI.radioButton import QTPieRadioButton
+from UI.mediaWidget import QTPieMediaWidget
+from UI.volumeWidget import QTPieVolumeWidget
+from UI.controlWidget import QTPieControlWidget
 
 
 class QTPie:
@@ -262,12 +265,13 @@ class QTPie:
 
         return btn 
 
-    def makeVolume(self, media, volumeW):
+    def makeVolume(self, mediaWidget, volumeWidget):
         """
         Create a volume slider for a given media to be put on a given parent
 
         Args:\n
-            media (QTPieMedia): The holder of a type of media
+            mediaWidget (QTPieMediaWidget): The widget that holds all media player widgets.
+            volumeWidget (QTPieVolumeWidget): The holder of a type of media
             parent (QTPieScrollArea or QTPieWidget): The widget for the button to be placed on
 
         Returns:\n
@@ -279,36 +283,36 @@ class QTPie:
         volume.setOrientation(QtCore.Qt.Horizontal)
         volume.setMinimum(0)
         volume.setMaximum(100)
-        #volume.valueChanged.connect(lambda: self.actions.changeVolume(media.media, volumeW.volumeBar, volumeW.volumeBtn, self.app, self.tunableDict))
-        volume.setValue(media.media.volume())
+        #volume.valueChanged.connect(lambda: self.actions.changeVolume(mediaWidget.media, volumeWidget.volumeBar, volumeWidget.volumeBtn, self.app, self.tunableDict))
+        volume.setValue(mediaWidget.media.volume())
         volume.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
         return volume
     
-    def makeVProgressBar(self, media):
+    def makeVideoProgressBar(self, mediaWidget):
         """
         Create a volume slider for a given media to be put on a given parent
 
         Args:\n
-            media (QTPieMedia): The holder of a type of media
+            mediaWidget (QTPieMediaWidget): The widget that holds all media player widgets.
             parent (QTPieScrollArea or QTPieWidget): The widget for the button to be placed on
 
         Returns:\n
             QTPieSlider: An extension of the PyQt5 QSlider
         """
 
-        vProgress = QTPieSlider()
-        vProgress.setObjectName("VideoProgressBar")
-        vProgress.setOrientation(QtCore.Qt.Horizontal)
-        vProgress.setMinimum(0)
-        vProgress.setMaximum(100)
-        vProgress.sliderMoved.connect(lambda: self.actions.changeTimestamp(media, vProgress))
-        media.positionChanged.connect(lambda: self.actions.timestampChanged(media, vProgress))
-        media.durationChanged.connect(lambda: self.actions.durationChanged(media, vProgress))
-        vProgress.setValue(media.position())
-        vProgress.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        videoProgress = QTPieSlider()
+        videoProgress.setObjectName("VideoProgressBar")
+        videoProgress.setOrientation(QtCore.Qt.Horizontal)
+        videoProgress.setMinimum(0)
+        videoProgress.setMaximum(100)
+        videoProgress.sliderMoved.connect(lambda: self.actions.changeTimestamp(mediaWidget, videoProgress))
+        mediaWidget.media.positionChanged.connect(lambda: self.actions.timestampChanged(mediaWidget, videoProgress))
+        mediaWidget.media.durationChanged.connect(lambda: self.actions.durationChanged(mediaWidget, videoProgress))
+        videoProgress.setValue(mediaWidget.media.position())
+        videoProgress.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
-        return vProgress
+        return videoProgress
 
     def addVideo(self, gridData, name="", filename=r"ChrisH.mp4", enableDrop=False):
         """
@@ -326,7 +330,7 @@ class QTPie:
         name = "mediaPlayer" + name
 
         '''Making the widget for the media'''
-        mediaWidget = QTPieWidget(doesSignal=True)
+        mediaWidget = QTPieMediaWidget(doesSignal=True)
         mediaWidget.setObjectName(name)
         mediaWidget.setMouseTracking(True)
         mediaWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
@@ -350,18 +354,19 @@ class QTPie:
 
 
         '''Making the widget for the media controls'''
-        controlWidget = QTPieWidget(doesSignal=True)
+        controlWidget = QTPieControlWidget(doesSignal=True)
         controlWidget.setObjectName(name+"Controls")
         controlWidget.setMouseTracking(True)
         controlWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
         #Making controls for the controlWidget
         controlWidget.playPause = self.makeButton(lambda: self.actions.playPause(mediaWidget, controlWidget, self.app), name="VideoPlayPause", icon="pause")
-        controlWidget.openFile = self.makeButton(lambda: self.actions.openFile(mediaWidget.media), name="VideoOpenFile", icon="file")
-        controlWidget.vProgress = self.makeVProgressBar(mediaWidget.media)
+        controlWidget.openFile = self.makeButton(lambda: self.actions.openFile(mediaWidget), name="VideoOpenFile", icon="file")
+        controlWidget.videoProgress = self.makeVideoProgressBar(mediaWidget)
+
 
         '''Making the widget for the volume'''
-        volumeWidget = QTPieWidget(doesSignal=True)
+        volumeWidget = QTPieVolumeWidget(doesSignal=True)
         volumeWidget.setObjectName(name+"Volume")
         volumeWidget.setMouseTracking(True)
         volumeWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
@@ -373,7 +378,7 @@ class QTPie:
         self.addGridRow(volumeWidget.grid, volumeWidget.gridCount, 6)
 
         volumeWidget.volumeBar = self.makeVolume(mediaWidget, volumeWidget)
-        volumeWidget.volumeBar.valueChanged.connect(lambda: self.actions.changeVolume(mediaWidget.media, volumeWidget.volumeBar, volumeWidget.volumeBtn, self.app, self.tunableDict))
+        volumeWidget.volumeBar.valueChanged.connect(lambda: self.actions.changeVolume(mediaWidget, volumeWidget, self.app, self.tunableDict))
         volumeWidget.volumeBtn = self.makeButton(lambda: self.actions.muteUnmute(mediaWidget, volumeWidget, self.app, self.tunableDict),
                                                  mouseEnterAction=lambda: self.actions.volumeHover(volumeWidget),
                                                  name="VideoVolumeBtn", icon="volume", enableHover=True)
@@ -399,7 +404,7 @@ class QTPie:
         controlWidget.grid.addWidget(controlWidget.playPause, 1, 0, 1, 1)
         controlWidget.grid.addWidget(controlWidget.volumeWidget, 1, 1, 1, 6)
         controlWidget.grid.addWidget(controlWidget.openFile, 1, 11, 1, 1)
-        controlWidget.grid.addWidget(controlWidget.vProgress, 0, 0, 1, 12)
+        controlWidget.grid.addWidget(controlWidget.videoProgress, 0, 0, 1, 12)
 
         #Finalizing the controlWidget and connecting actions
         controlWidget.setLayout(controlWidget.grid)

@@ -41,22 +41,6 @@ class QTPieWidget(QtWidgets.QWidget):
         self.grid = None
         self.gridCount = 0
 
-        #Media variables for the widget
-        self.media = None
-        self.video = None
-        self.filename = ""
-
-        #Control variables for the widget
-        self.playPause = None
-        self.volumeWidget = None
-        self.volumeBtn = None
-        self.volumeBar = None
-        self.openFile = None
-        self.vProgress = None
-
-        self.controls = [self.playPause, self.volumeWidget, self.openFile, self.vProgress]
-        self.subWidgets = {}
-
         self.setAcceptDrops(self.doesSignal)
     
     def resizeEvent(self, event):
@@ -109,46 +93,3 @@ class QTPieWidget(QtWidgets.QWidget):
             self.mouseLeave.emit()
 
         return super(QTPieWidget, self).leaveEvent(event)
-    
-    def dragEnterEvent(self, event):
-        """
-        Triggers when dragged over
-
-        Args:\n
-            event (PyQt5.QtGui.QDragEnterEvent): Data held with the object being dragged
-        
-        Returns:\n
-            PyQt5.QtGui.QDragEnterEvent: Continues the original PyQt5 dragEnterEvent code.
-        """
-
-        if event.mimeData().hasText():
-            event.accept()
-        else:
-            event.ignore()
-        
-        return super(QTPieWidget, self).dragEnterEvent(event)
-
-    def dropEvent(self, event):
-        """
-        Triggers when dropped on
-
-        Args:\n
-            event (PyQt5.QtGui.QDragDropEvent): Data held with the object being dropped
-        
-        Returns:\n
-            PyQt5.QtGui.QDragDropEvent: Continues the original PyQt5 dropEvent code.
-        """
-
-        if self.doesSignal and event.mimeData().text()[8:].lower().endswith(('.mp4', '.avi', '.m4v')):
-            self.filename = event.mimeData().text()[8:]
-            self.media.setMedia(PyQt5.QtMultimedia.QMediaContent(PyQt5.QtCore.QUrl.fromLocalFile(self.filename)))
-            self.media.play()
-        
-        return super(QTPieWidget, self).dropEvent(event)
-    
-    def updateControls(self):
-        """
-        Updates the items in the controls list
-        """
-
-        self.controls = [self.playPause, self.volumeWidget, self.openFile, self.vProgress]
