@@ -21,8 +21,9 @@ from tunable import Tunable
 
 
 class Actions:
-    def __init__(self):
-        pass
+    """
+    Holds the actions functions for the QTPie GUI
+    """
 
     def fileDialog(self):
         """
@@ -103,7 +104,6 @@ class Actions:
             tunableDict (JSON): The tunable variables for the application
         """
 
-        #media.setMuted(False)
         mediaWidget.media.setVolume(volumeWidget.volumeBar.value())
         utilities.changeJSON("volume", volumeWidget.volumeBar.value())
 
