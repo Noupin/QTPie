@@ -20,21 +20,16 @@ class QTPieLabel(QtWidgets.QLabel):
         QtWidgets (PyQt5.QtWidgets.QLabel): Inherits from QLabel
     """
 
-    def __init__(self, parent=None, dropArea=False, isImage=False, filename=""):
+    def __init__(self, parent=None, dropArea=False):
         """
         Initializes the super class
 
         Args:\n
             parent (PyQt5.QtWidgets.*): The object to put the widget on. Defaults to None.
             dropArea (bool, optional): Enables or disables drag and drop. Defaults to False.
-            isImage (bool, optional): Determines whether the label holds a QTPiePixmap or not. Defaults to False.
         """
 
         super().__init__(parent)
-
-        self.isImage = isImage
-        self.filename = filename
-        self.pixelMap = None
 
         self.setAcceptDrops(dropArea)
     
@@ -67,30 +62,7 @@ class QTPieLabel(QtWidgets.QLabel):
             PyQt5.QtGui.QDragDropEvent: Continues the original PyQt5 dropEvent code.
         """
 
-        if self.isImage and event.mimeData().text()[8:].lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp')):
-            self.filename = event.mimeData().text()[8:]
-            self.pixelMap = self.pixelMap.fromImage(PyQt5.QtGui.QImage(self.filename))
-            self.pixelMap = self.pixelMap.scaled(self.size(), PyQt5.QtCore.Qt.KeepAspectRatio)
-            self.setPixmap(self.pixelMap)
-        elif not self.isImage:
-            self.setText(event.mimeData().text())
+        self.setText(event.mimeData().text())
         
         return super().dropEvent(event)
-    
-    def resizeEvent(self, event):
-        """
-        Resizes the image inside the label to ensure the aspect ratio is kept and the image looks nice
 
-        Args:
-            event (PyQt5.QtGui.QResizeEvent): Data held with the label being resized
-
-        Returns:
-            PyQt5.QtGui.QResizeEvent: Continues the original PyQt5 resizeEvent code.
-        """
-
-        if self.isImage:
-            self.pixelMap = self.pixelMap.fromImage(PyQt5.QtGui.QImage(self.filename))
-            self.pixelMap = self.pixelMap.scaled(self.size(), PyQt5.QtCore.Qt.KeepAspectRatio)
-            self.setPixmap(self.pixelMap)
-
-        return super().resizeEvent(event)

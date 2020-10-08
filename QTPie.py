@@ -21,21 +21,22 @@ import utilities
 from actions import Actions
 from tunable import Tunable
 from UI.dial import QTPieDial
+from UI.image import QTPieImage
 from UI.label import QTPieLabel
 from UI.media import QTPieMedia
 from UI.video import QTPieVideo
-from UI.window import QTPieWindow
-from UI.widget import QTPieWidget
 from UI.button import QTPieButton
 from UI.pixmap import QTPiePixmap
 from UI.slider import QTPieSlider
+from UI.widget import QTPieWidget
+from UI.window import QTPieWindow
 from UI.textbox import QTPieTextbox
 from UI.checkbox import QTPieCheckbox
 from UI.dropdown import QTPieDropdown
 from UI.scrollArea import QTPieScroll
+from UI.mediaWidget import QTPieMediaWidget
 from UI.progressBar import QTPieProgressBar
 from UI.radioButton import QTPieRadioButton
-from UI.mediaWidget import QTPieMediaWidget
 from UI.volumeWidget import QTPieVolumeWidget
 from UI.controlWidget import QTPieControlWidget
 
@@ -211,7 +212,7 @@ class QTPie:
 
         name += "Image"
 
-        image = QTPieLabel(dropArea=enableDrop, isImage=True, filename=filename)
+        image = QTPieImage(dropArea=enableDrop, filename=filename)
         image.pixelMap = QTPiePixmap()
         image.pixelMap = image.pixelMap.fromImage(PyQt5.QtGui.QImage(filename))
 
