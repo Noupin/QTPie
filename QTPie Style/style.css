@@ -7,7 +7,7 @@ QMainWindow{
 QWidget{
     background-color:  #ececec;
 }
-QWidget#mediaPlayerControls{
+QWidget#mediaPlayerVolume{
     background-color: green;
 }
 
@@ -34,7 +34,7 @@ QPushButton#femaleBtn{
     background-color: #d9534f;
 }
 QPushButton:pressed{
-    border: 1px solid #cecece;
+    border: 1px solid #9c9c9c;
 }
 
 /*Progress Bar*/

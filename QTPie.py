@@ -360,6 +360,7 @@ class QTPie:
         controlWidget.setObjectName(name+"Controls")
         controlWidget.setMouseTracking(True)
         controlWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        controlWidget.setStyleSheet("background-color: blue;")
 
         #Assigning widgets for the controlWidget
         controlWidget.playPause = self.makeButton(lambda: self.actions.playPause(mediaWidget, controlWidget, self.app), name="VideoPlayPause", icon="pause")
@@ -429,6 +430,8 @@ class QTPie:
         
         self.actions.hideControls(mediaWidget, controlWidget)
         self.actions.playPause(mediaWidget, controlWidget, self.app)
+
+        self.app.setStyleSheet(self.app.styleSheet())
 
         return mediaWidget
     
