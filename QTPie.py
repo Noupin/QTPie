@@ -525,7 +525,7 @@ class QTPie:
 
         return checkbox
 
-    def addTextbox(self, gridData, name="", align="left"):
+    def addTextbox(self, gridData, name="", align="left", enableDrop=False):
         """
         Combines the basic Textbox code into one function with added functionality and support for CSS syntax
 
@@ -537,7 +537,7 @@ class QTPie:
             QTPieTextbox: A PyQt5 textbox with drag and drop optional
         """
 
-        textbox = QTPieTextbox()
+        textbox = QTPieTextbox(dropArea=enableDrop)
         textbox.setObjectName(name)
         textbox.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.alignWidget(textbox, align)

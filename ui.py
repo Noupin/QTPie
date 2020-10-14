@@ -53,7 +53,7 @@ class UI:
         self.radio1 = self.ui.addRadioButton([3, 12, 3, 1], txt="r2")
         self.check = self.ui.addCheckbox([6, 12, 3, 1], txt="c1")
         self.dial = self.ui.addDial([9, 12, 3, 1], lambda: self.ui.actions.dialAndProgress(self.dial, self.progressBar))
-        self.text = self.ui.addTextbox([0, 3, 6, 1], align="center")
+        self.text = self.ui.addTextbox([0, 3, 6, 1], align="center", enableDrop=True)
         self.autoBox = self.ui.addDropdown([6, 3, 6, 1], align="center", values=["hi", "hello", "test"], textEdit=True)
         self.image = self.ui.addImage([3, 4, 6, 3], keepAR=True, enableDrop=True)
         self.video = self.ui.addVideo([3, 7, 6, 3])

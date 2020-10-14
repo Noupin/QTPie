@@ -1,6 +1,6 @@
 #pylint: disable=C0103, C0301, R0902
 """
-Sets up and maintains the Label part of the UI for QTPie
+Sets up and maintains the Label part of the UI for QTPie.
 """
 __author__ = "Noupin"
 
@@ -14,15 +14,15 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 
 class QTPieLabel(QtWidgets.QLabel):
     """
-    A super function extending the QLabel class from PyQt5. This adds extra functionality to the label to be used in QTPie
+    A super function extending the QLabel class from PyQt5. This adds extra functionality to the label to be used in QTPie.
 
     Args:\n
-        QtWidgets (PyQt5.QtWidgets.QLabel): Inherits from QLabel
+        QtWidgets (PyQt5.QtWidgets.QLabel): Inherits from QLabel.
     """
 
     def __init__(self, parent=None, dropArea=False):
         """
-        Initializes the super class
+        Initializes the super class.
 
         Args:\n
             parent (PyQt5.QtWidgets.*): The object to put the widget on. Defaults to None.
@@ -35,13 +35,13 @@ class QTPieLabel(QtWidgets.QLabel):
     
     def dragEnterEvent(self, event):
         """
-        Triggers when dragged over
+        Triggers when dragged over.
 
         Args:\n
-            event (PyQt5.QtGui.QDragEnterEvent): Data held with the object being dragged
+            event (PyQt5.QtGui.QDragEnterEvent): Data held with the object being dragged.
         
         Returns:\n
-            PyQt5.QtGui.QDragEnterEvent: Continues the original PyQt5 dragEnterEvent code.
+            PyQt5.QtWidgets.QLabel.leaveEvent: Runs the parents dragEnterEvent.
         """
 
         if event.mimeData().hasText():
@@ -49,20 +49,20 @@ class QTPieLabel(QtWidgets.QLabel):
         else:
             event.ignore()
         
-        return super().dragEnterEvent(event)
+        return super(QTPieLabel, self).dragEnterEvent(event)
 
     def dropEvent(self, event):
         """
-        Triggers when dropped on
+        Triggers when dropped on.
 
         Args:\n
-            event (PyQt5.QtGui.QDragDropEvent): Data held with the object being dropped
+            event (PyQt5.QtGui.QDragDropEvent): Data held with the object being dropped.
         
         Returns:\n
-            PyQt5.QtGui.QDragDropEvent: Continues the original PyQt5 dropEvent code.
+            PyQt5.QtWidgets.QLabel.leaveEvent: Runs the parents dropEvent.
         """
 
         self.setText(event.mimeData().text())
         
-        return super().dropEvent(event)
+        return super(QTPieLabel, self).dropEvent(event)
 

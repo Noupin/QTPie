@@ -1,6 +1,6 @@
 #pylint: disable=C0103, C0301, R0902
 """
-Sets up and maintains the Button part of the UI for QTPie
+Sets up and maintains the Button part of the UI for QTPie.
 """
 __author__ = "Noupin"
 
@@ -8,23 +8,22 @@ __author__ = "Noupin"
 import os
 import sys
 import PyQt5
-from PyQt5 import QtWidgets, QtCore, QtGui
 
 
-class QTPieButton(QtWidgets.QPushButton):
+class QTPieButton(PyQt5.QtWidgets.QPushButton):
     """
-    A super function extending the QPushButton class from PyQt5. This adds extra functionality to the button to be used in QTPie
+    A super function extending the QPushButton class from PyQt5. This adds extra functionality to the button to be used in QTPie.
 
     Args:\n
-        QtWidgets (PyQt5.QtWidgets.QPushButton): Inherits from QPushButton
+        QtWidgets (PyQt5.QtWidgets.QPushButton): Inherits from QPushButton.
     """
 
-    mouseEnter = QtCore.pyqtSignal()
-    mouseLeave = QtCore.pyqtSignal()
+    mouseEnter = PyQt5.QtCore.pyqtSignal()
+    mouseLeave = PyQt5.QtCore.pyqtSignal()
 
     def __init__(self, parent=None, dropArea=False, hover=False):
         """
-        Initializes the super class
+        Initializes the super class.
 
         Args:\n
             parent (PyQt5.QtWidgets.*): The object to put the widget on. Defaults to None.
@@ -43,10 +42,13 @@ class QTPieButton(QtWidgets.QPushButton):
     
     def dragEnterEvent(self, event):
         """
-        Triggers when dragged over
+        Triggers when dragged over.
 
         Args:\n
-            event (PyQt5.QtGui.QDragEnterEvent): Data held with the object being dragged
+            event (PyQt5.QtGui.QDragEnterEvent): Data held with the object being dragged.
+        
+        Returns:\n
+            PyQt5.QtWidgets.QPushButton.dragEnterEvent: Runs the parents dragEnterEvent.
         """
 
         if event.mimeData().hasText():
@@ -58,10 +60,13 @@ class QTPieButton(QtWidgets.QPushButton):
 
     def dropEvent(self, event):
         """
-        Triggers when dropped on
+        Triggers when dropped on.
 
         Args:\n
-            event (PyQt5.QtGui.QDragDropEvent): Data held with the object being dropped
+            event (PyQt5.QtGui.QDragDropEvent): Data held with the object being dropped.
+        
+        Returns:\n
+            PyQt5.QtWidgets.QPushButton.dropEvent: Runs the parents dropEvent.
         """
 
         self.setText(event.mimeData().text())
@@ -70,13 +75,14 @@ class QTPieButton(QtWidgets.QPushButton):
     
     def enterEvent(self, event):
         """
-        Triggers when the mouse enters the QTPieWidget
+        Triggers when the mouse enters the QTPieWidget.
 
         Args:\n
-            event (PyQt5.QtGui.QEnterEvent): The PyQt5 mouse enter event
+            event (PyQt5.QtGui.QEnterEvent): The PyQt5 mouse enter event.
+        
+        Returns:\n
+            PyQt5.QtWidgets.QPushButton.enterEvent: Runs the parents enterEvent.
         """
-
-        self.mouseOn = True
 
         if self.hover:
             self.mouseEnter.emit()
@@ -85,13 +91,14 @@ class QTPieButton(QtWidgets.QPushButton):
     
     def leaveEvent(self, event):
         """
-        Triggers when the mouse leaves the QTPieWidget
+        Triggers when the mouse leaves the QTPieWidget.
 
         Args:\n
-            event (PyQt5.QtGui.QEnterEvent): The PyQt5 mouse leave event
+            event (PyQt5.QtGui.QLeaveEvent): The PyQt5 mouse leave event.
+        
+        Returns:\n
+            PyQt5.QtWidgets.QPushButton.leaveEvent: Runs the parents leaveEvent.
         """
-
-        self.mouseOn = False
 
         if self.hover:
             self.mouseLeave.emit()

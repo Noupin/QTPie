@@ -1,6 +1,6 @@
 #pylint: disable=C0103, C0301, R0902
 """
-Sets up and maintains the Pixmap part of the UI for QTPie
+Sets up and maintains the Pixmap part of the UI for QTPie.
 """
 __author__ = "Noupin"
 
@@ -8,23 +8,22 @@ __author__ = "Noupin"
 import os
 import sys
 import PyQt5
-from PyQt5 import QtWidgets, QtCore, QtGui
 
 
-class QTPiePixmap(QtGui.QPixmap):
+class QTPiePixmap(PyQt5.QtGui.QPixmap):
     """
-    A super function extending the QLabel class from PyQt5. This adds extra functionality to the pixmap to be used in QTPie
+    A super function extending the QPixmap class from PyQt5. This adds extra functionality to the pixmap to be used in QTPie.
 
     Args:\n
-        QtGui (PyQt5.QtGui.QPixmap): Inherits from QPixmap
+        QtGui (PyQt5.QtGui.QPixmap): Inherits from QPixmap.
     """
 
     def __init__(self, parent=None):
         """
-        Initializes the super class
+        Initializes the super class.
 
         Args:\n
-            parent (PyQt5.QtWidgets.*): The object to put the widget on. Defaults to None.
+            parent (PyQt5.QtWidgets.*): The object to put the widget on. Defaults to None..
         """
 
         super().__init__(parent)

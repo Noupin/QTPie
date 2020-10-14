@@ -1,6 +1,6 @@
 #pylint: disable=C0103, C0301, R0902
 """
-Sets up and maintains the Widget part of the UI for QTPie
+Sets up and maintains the Media Widget part of the UI for QTPie.
 """
 __author__ = "Noupin"
 
@@ -8,7 +8,6 @@ __author__ = "Noupin"
 import os
 import sys
 import PyQt5
-from PyQt5 import QtWidgets, QtCore, QtGui
 
 #First Party Imports
 from UI.widget import QTPieWidget
@@ -19,21 +18,23 @@ class QTPieMediaWidget(QTPieWidget):
     A super function extending the QTPieWidget class from QTPie. Specialized for media attributes.
 
     Args:\n
-        QtWidgets (PyQt5.QtWidgets.QWidget): Inherits from QWidget
+        QTPieWidget (UI.widget.QTPieWidget): Inherits from QTPieWidget.
     """
 
     def __init__(self, parent=None, doesSignal=False, dropArea=False):
         """
-        Initializes the super class
+        Initializes the super class.
 
         Args:\n
             parent (PyQt5.QtWidgets.*): The object to put the widget on. Defaults to None.
-            isVideo (bool, optional): Determines whether the video attributes will be used. Defaults to False.
+            doesSignal (bool, optional): Whether or not signals for leaving and entering are emitted. Defaults to False.
+            dropArea (bool, optional): Whether or not dropping of a video file is allowed. Defaults to False.
         """
 
         super().__init__(parent, doesSignal)
 
         self.doesSignal = doesSignal
+        self.dropArea = dropArea
 
         #Grid varibles for the widget
         self.grid = None
@@ -44,17 +45,17 @@ class QTPieMediaWidget(QTPieWidget):
         self.video = None
         self.filename = ""
 
-        self.setAcceptDrops(self.doesSignal)
+        self.setAcceptDrops(self.dropArea)
     
     def dragEnterEvent(self, event):
         """
-        Triggers when dragged over
+        Triggers when dragged over.
 
         Args:\n
             event (PyQt5.QtGui.QDragEnterEvent): Data held with the object being dragged
         
         Returns:\n
-            PyQt5.QtGui.QDragEnterEvent: Continues the original PyQt5 dragEnterEvent code.
+            PyQt5.QtWidgets.QWidget.dragEnterEvent: Runs the parents dragEnterEvent.
         """
 
         if event.mimeData().hasText():
@@ -69,10 +70,10 @@ class QTPieMediaWidget(QTPieWidget):
         Triggers when dropped on
 
         Args:\n
-            event (PyQt5.QtGui.QDragDropEvent): Data held with the object being dropped
+            event (PyQt5.QtGui.QDragDropEvent): Data held with the object being dropped.
         
         Returns:\n
-            PyQt5.QtGui.QDragDropEvent: Continues the original PyQt5 dropEvent code.
+            PyQt5.QtWidgets.QWidget.dropEvent: Runs the parents dropEvent.
         """
 
         if self.dropEvent and event.mimeData().text()[8:].lower().endswith(('.mp4', '.avi', '.m4v')):
@@ -81,10 +82,4 @@ class QTPieMediaWidget(QTPieWidget):
             self.media.play()
         
         return super(QTPieMediaWidget, self).dropEvent(event)
-    
-    def updateControls(self):
-        """
-        Updates the items in the controls list
-        """
 
-        self.controls = [self.playPause, self.volumeWidget, self.openFile, self.vProgress]

@@ -1,6 +1,6 @@
 #pylint: disable=C0103, C0301, R0902
 """
-Sets up and maintains the Label part of the UI for QTPie
+Sets up and maintains the Image part of the UI for QTPie.
 """
 __author__ = "Noupin"
 
@@ -8,7 +8,6 @@ __author__ = "Noupin"
 import os
 import sys
 import PyQt5
-from PIL import Image
 from PyQt5 import QtWidgets, QtCore, QtGui
 
 #First Party Imports
@@ -17,10 +16,11 @@ from UI.label import QTPieLabel
 
 class QTPieImage(QTPieLabel):
     """
-    A super function extending the QLabel class from PyQt5. This adds extra functionality to the label to be used in QTPie
+    A super function extending the QTPieLabel class from QTPie. This adds extra
+    functionality to the QTPieLabel to be used as an image holder in QTPie.
 
     Args:\n
-        QtWidgets (PyQt5.QtWidgets.QLabel): Inherits from QLabel
+        QTPieLabel (UI.label.QTPieLabel): Inherits from QTPieLabel.
     """
 
     def __init__(self, parent=None, dropArea=False, filename=""):
@@ -33,22 +33,20 @@ class QTPieImage(QTPieLabel):
             filename (str, optional): The given path for the image to be displayed. Defaults to "".
         """
 
-        super().__init__(parent)
+        super().__init__(parent, dropArea)
 
         self.filename = filename
         self.pixelMap = None
 
-        self.setAcceptDrops(dropArea)
-
     def dropEvent(self, event):
         """
-        Triggers when dropped on
+        Triggers when dropped on.
 
         Args:\n
-            event (PyQt5.QtGui.QDragDropEvent): Data held with the object being dropped
+            event (PyQt5.QtGui.QDragDropEvent): Data held with the object being dropped.
         
         Returns:\n
-            PyQt5.QtGui.QDragDropEvent: Continues the original PyQt5 dropEvent code.
+            PyQt5.QtWidgets.QLabel.dropEvent: Runs the parents dropEvent.
         """
 
         if event.mimeData().text()[8:].lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp')):
@@ -61,17 +59,17 @@ class QTPieImage(QTPieLabel):
     
     def resizeEvent(self, event):
         """
-        Resizes the image inside the label to ensure the aspect ratio is kept and the image looks nice
+        Resizes the image inside the label to ensure the aspect ratio is kept and the image looks original.
 
-        Args:
-            event (PyQt5.QtGui.QResizeEvent): Data held with the label being resized
+        Args:\n
+            event (PyQt5.QtGui.QResizeEvent): Data held with the label being resized.
 
-        Returns:
-            PyQt5.QtGui.QResizeEvent: Continues the original PyQt5 resizeEvent code.
+        Returns:\n
+            PyQt5.QtWidgets.QLabel.resizeEvent: Runs the parents resizeEvent.
         """
 
         self.pixelMap = self.pixelMap.fromImage(PyQt5.QtGui.QImage(self.filename))
         self.pixelMap = self.pixelMap.scaled(self.size(), PyQt5.QtCore.Qt.KeepAspectRatio)
         self.setPixmap(self.pixelMap)
 
-        return super().resizeEvent(event)
+        return super(QTPieLabel, self).resizeEvent(event)
