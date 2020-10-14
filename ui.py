@@ -1,6 +1,6 @@
 #pylint: disable=C0103, C0301, R0902
 """
-The UI handling for the QTPie Example application
+The UI handling for the QTPie Example application.
 """
 __author__ = "Noupin"
 
@@ -20,22 +20,22 @@ from tunable import Tunable as tunable
 
 class UI:
     """
-    Master class for the Forge application
+    Master class for the application.
     """
 
     def __init__(self, ui):
         """
-        Manages the different pages for the UI
+        Manages the different pages for the UI.
 
         Args:
-            ui (QTPie.QTPie): Extension of PyQt5
+            ui (QTPie.QTPie): Extension of PyQt5.
         """
 
         self.ui = ui
     
     def makePage(self):
         """
-        Lays out the UI for the Load screen
+        Lays out the UI for the Load screen.
         """
 
         for _ in range(12):

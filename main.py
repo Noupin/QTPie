@@ -1,6 +1,6 @@
 #pylint: disable=C0103, C0301, R0902
 """
-The master file for the QTPie Example application
+The master file for the QTPie Example application.
 """
 __author__ = "Noupin"
 
@@ -21,10 +21,14 @@ from tunable import Tunable
 
 class Main:
     """
-    Master class for the QTPie Example application
+    Master class for the QTPie Example application.
     """
 
     def __init__(self):
+        """
+        Initializes the application.
+        """
+
         self.QTPie = QTPie(tunableDict=Tunable.tunableDict, title="QTPie")
         self.ui = UI(self.QTPie)
         self.ui.makePage()

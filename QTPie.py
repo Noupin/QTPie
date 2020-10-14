@@ -1,6 +1,6 @@
 #pylint: disable=C0103, C0301, R0902
 """
-Sets up and maintains the UI for QTPie Example
+Sets up and maintains the UI for QTPie Example.
 """
 __author__ = "Noupin"
 
@@ -43,12 +43,12 @@ from UI.controlWidget import QTPieControlWidget
 
 class QTPie:
     """
-    Manages the UI based on the users monitor and position in the application
+    Manages the UI based on the users monitor and position in the application.
     """
 
     def __init__(self, icon=None, tunableDict=json.loads(json.dumps({"windowX": 20, "windowY": 50, "windowWidth": 500, "windowHeight": 500, "volume": 50})), title="Window"):
         """
-        Initializing the UI for Forge
+        Initializing the UI for Forge.
 
         Args:\n
             icon (string, optional): File path to the icon(.ico file) for the top left of the window. Defaults to None.
@@ -78,13 +78,12 @@ class QTPie:
         self.gridCount = 0
         self.grid.setSpacing(0)
         self.grid.setContentsMargins(0, 0, 0, 0)
-        self.space = self.addLabel([1, 1, 1, 1], txt="", name="Spacer")
+        self.space = self.addLabel([1, 1, 1, 1], txt="", name="Spacer", addToGrid=False)
 
         self.window = QTPieWidget()
         self.window.setLayout(self.grid)
 
         self.mainWindow = QTPieWindow()
-        #self.mainWindow.setWindowOpacity(.5)
         self.mainWindow.setGeometry(self.tunableDict["windowX"],
                                     self.tunableDict["windowY"],
                                     self.tunableDict["windowWidth"],
@@ -94,16 +93,16 @@ class QTPie:
 
     def percentToPosition(self, xPos, yPos, width, height):
         """
-        Converts percent values to pixel values and returns pixel values for QTPie to use
+        Converts percent values to pixel values and returns pixel values for QTPie to use.
 
         Args:\n
-            xPos (int, str, float): The x coordinate of the window on the users screen
-            yPos (int, str, float):  The y coordinate of the window on the users screen
-            width (int, str, float: The width of the window
-            height (int, str, float): The height of the window
+            xPos (int, str, float): The x coordinate of the window on the users screen.
+            yPos (int, str, float):  The y coordinate of the window on the users screen.
+            width (int, str, float: The width of the window.
+            height (int, str, float): The height of the window.
 
         Returns:\n
-            tuple of int: The arg converted to an int pixel value
+            tuple of int: The arg converted to an int pixel value.
         """
 
         if type(xPos) == str:
@@ -123,43 +122,45 @@ class QTPie:
 
     def alignWidget(self, widget, alignment):
         """
-        Given an alignment direction the widget is aligned to that direction
+        Given an alignment direction the widget is aligned to that direction.
 
         Args:\n
-            widget (PyQt5.QtWidgets.QWidget): A PyQt5 widget to be aligned
-            alignment (str): A left, right or center string
+            widget (PyQt5.QtWidgets.QWidget): A PyQt5 widget to be aligned.
+            alignment (str): A left, right or center string.
         """
 
         alignments = {"left": QtCore.Qt.AlignLeft, "center": QtCore.Qt.AlignCenter, "right": QtCore.Qt.AlignRight}
-        widget.setAlignment(alignments[alignment])
+        widget.setAlignment(alignments[alignment.lower()])
 
     def addGridRow(self, grid, count, columns):
         """
-        Adds a row to the given grid on the count
+        Adds a row to the given grid on the count.
 
         Args:\n
-            grid (PyQt5.QtWidgets.QGridLayout): A grid with count amount of rows
-            count (int): The current amount of rows the grid being passed in has
+            grid (PyQt5.QtWidgets.QGridLayout): A grid with count amount of rows.
+            count (int): The current amount of rows the grid being passed in has.
+            columns (int): The amount of columns to be added to each row.
         """
 
         for _ in range(columns):
             grid.addWidget(self.space, count, _)
             grid.setColumnStretch(_, 1)
         grid.setRowStretch(count, 1)
-        #count += 1
 
-    def addLabel(self, gridData, name="", txt="Button", enableDrop=False, align="center"):
+    def addLabel(self, gridData, name="", txt="Button", enableDrop=False, align="center", addToGrid=True):
         """
-        Combines the basic Label code into one function with added functionality and support for css syntax
+        Combines the basic Label code into one function with added functionality and support for css syntax.
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values
+            gridData (list of int): List of column, row, columnspan, rowspan values.
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
             txt (str, optional): The text to be displayed. Defaults to "Button".
             enableDrop (bool, optional): Determines whether drag and drop is enabled. Defaults to False.
+            align (str, optional): left, right, center alignment of the content of the label. Defaults to "center".
+            addToGrid (bool, optional): whether ot add to the master grid or not. Defaults to True.
 
         Returns:\n
-            QTPieLabel: A PyQt5 label
+            QTPieLabel: A QTPie label.
         """
 
         label = QTPieLabel(dropArea=enableDrop)
@@ -167,23 +168,25 @@ class QTPie:
         label.setText(txt)
         label.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.alignWidget(label, align)
-        self.grid.addWidget(label, gridData[1], gridData[0], gridData[3], gridData[2])
+
+        if addToGrid:
+            self.grid.addWidget(label, gridData[1], gridData[0], gridData[3], gridData[2])
 
         return label
     
     def addButton(self, gridData, action, name="", txt="Button", enableDrop=False):
         """
-        Combines the basic Button code into one function with added functionality and support for css syntax
+        Combines the basic Button code into one function with added functionality and support for css syntax.
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values
-            action (def): The function to be called on click
+            gridData (list of int): List of column, row, columnspan, rowspan values.
+            action (def): The function to be called on click.
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
             txt (str, optional): The text the be displayed. Defaults to "Button".
             enableDrop (bool, optional): Determines whether drag and drop is enabled. Defaults to False.
 
         Returns:\n
-            QTPieButton: A PyQt5 push button
+            QTPieButton: A QTPie button.
         """
 
         btn = QTPieButton(dropArea=enableDrop)
@@ -205,9 +208,10 @@ class QTPie:
             filename (str, optional): The filepath for the pixmap image. Defaults to "icon.png".
             keepAR (bool, optional): Whether to keep the original pictures aspect ratio or fit to given width and height. Defaults to True.
             enableDrop (bool, optional): Determines whether drag and drop is enabled. Defaults to False.
+            align (str, optional): left, right, center alignment of the content of the label. Defaults to "center".
 
         Returns:\n
-            QTPieLabel: A PyQt scroll area with a PyQt5 label with a PyQt5 pixmap inside
+            QTPieImage: A QTPie image with a pixmamp in it and extending the QTPieLabel
         """
 
         name += "Image"
@@ -227,7 +231,7 @@ class QTPie:
 
     def makeButton(self, clickAction, mouseEnterAction=None, mouseLeaveAction=None, name="", txt="Button", icon="", enableDrop=False, enableHover=False):
         """
-        Combines the basic Button code into one function with added functionality and support for css syntax
+        Combines the basic Button code into one function with added functionality and support for css syntax. Does not apply to grid.
 
         Args:\n
             clickAction (def): The function to be called on click.
@@ -240,7 +244,7 @@ class QTPie:
             enableHover (bool, optional): Determines whether hovering signals are enabled. Defaults to False.
 
         Returns:\n
-            QTPieButton: A PyQt5 push button
+            QTPieButton: A PyQt5 push button.
         """
 
         icons = {"play": PyQt5.QtWidgets.QStyle.SP_MediaPlay,
@@ -268,15 +272,15 @@ class QTPie:
 
     def makeVolume(self, mediaWidget, volumeWidget):
         """
-        Create a volume slider for a given media to be put on a given parent
+        Create a volume slider for a given media. Does not apply to grid.
 
         Args:\n
             mediaWidget (QTPieMediaWidget): The widget that holds all media player widgets.
-            volumeWidget (QTPieVolumeWidget): The holder of a type of media
-            parent (QTPieScrollArea or QTPieWidget): The widget for the button to be placed on
+            volumeWidget (QTPieVolumeWidget): The widget that holds all volume widgets.
+            parent (QTPieScrollArea or QTPieWidget): The widget for the button to be placed on.
 
         Returns:\n
-            QTPieSlider: An extension of the PyQt5 QSlider
+            QTPieSlider: A QTPie slider.
         """
 
         volume = QTPieSlider()
@@ -292,14 +296,13 @@ class QTPie:
     
     def makeVideoProgressBar(self, mediaWidget):
         """
-        Create a volume slider for a given media to be put on a given parent
+        Create a volume slider for a given media. Does not apply to grid.
 
         Args:\n
             mediaWidget (QTPieMediaWidget): The widget that holds all media player widgets.
-            parent (QTPieScrollArea or QTPieWidget): The widget for the button to be placed on
 
         Returns:\n
-            QTPieSlider: An extension of the PyQt5 QSlider
+            QTPieSlider: A QTPie slider.
         """
 
         videoProgress = QTPieSlider()
@@ -314,6 +317,45 @@ class QTPie:
         videoProgress.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
         return videoProgress
+
+    def setupWidget(self, widget, name="", makeGrid=True, columns=1, rows=1):
+        """
+        Boilerplate for the QTPie widgets.
+
+        Args:\n
+            widget (QTPieWidget or super(QTPieWidget)): The widget to be setup.
+            name (str, optional): The name for the style sheet. Defaults to "".
+            makeGrid (bool, optional): Whether the grid is setup immediatley or not. Defautls to True.
+            columns (int, optional): The number of columns per row of the grid. Defaults to 1.
+            rows (int, optional): The number of rows in the grid. Defaults to 1.
+        """
+
+        widget.setObjectName(name)
+        widget.setMouseTracking(True)
+        widget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+
+        if makeGrid:
+            self.setupGrid(widget, name, columns, rows)
+        
+    def setupGrid(self, widget, name="", columns=1, rows=1):
+        """
+        Boilerplate for the PyQt5 QGridLayout's.
+
+        Args:\n
+            widget (QTPieWidget or super(QTPieWidget)): The widget to be setup.
+            name (str, optional): The name for the style sheet. Defaults to "".
+            columns (int, optional): The number of columns per row of the grid. Defaults to 1.
+            rows (int, optional): The number of rows in the grid. Defaults to 1.
+        """
+
+        widget.grid = QtWidgets.QGridLayout()
+        widget.grid.setObjectName(name)
+        widget.grid.setSpacing(0)
+        widget.grid.setContentsMargins(0, 0, 0, 0)
+
+        for i in range(rows):
+            self.addGridRow(widget.grid, widget.gridCount, columns)
+            widget.gridCount += 1
 
     def addVideo(self, gridData, name="", filename=r"ChrisH.mp4", enableDrop=False):
         """
@@ -332,9 +374,7 @@ class QTPie:
 
         '''Making the widget for the media'''
         mediaWidget = QTPieMediaWidget(doesSignal=True, dropArea=True)
-        mediaWidget.setObjectName(name)
-        mediaWidget.setMouseTracking(True)
-        mediaWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        self.setupWidget(mediaWidget, name=name)
 
         #Assigning video to mediaWidget
         mediaWidget.video = QTPieVideo()
@@ -347,19 +387,10 @@ class QTPie:
         mediaWidget.media.setVolume(self.tunableDict["volume"])
         mediaWidget.media.setObjectName(name)
 
-        #Assigning grid layout to mediaWidget
-        mediaWidget.grid = QtWidgets.QGridLayout()
-        mediaWidget.grid.setObjectName(name)
-        mediaWidget.grid.setSpacing(0)
-        mediaWidget.grid.setContentsMargins(0, 0, 0, 0)
-        self.addGridRow(mediaWidget.grid, mediaWidget.gridCount, 1)
-
 
         '''Making the widget for the media controls'''
         controlWidget = QTPieControlWidget(doesSignal=True)
-        controlWidget.setObjectName(name+"Controls")
-        controlWidget.setMouseTracking(True)
-        controlWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        self.setupWidget(controlWidget, name=name+"Controls", columns=12)
 
         #Assigning widgets for the controlWidget
         controlWidget.playPause = self.makeButton(lambda: self.actions.playPause(mediaWidget, controlWidget, self.app), name="VideoPlayPause", icon="pause")
@@ -369,16 +400,7 @@ class QTPie:
 
         '''Making the widget for the volume controls'''
         volumeWidget = QTPieVolumeWidget(doesSignal=True)
-        volumeWidget.setObjectName(name+"Volume")
-        volumeWidget.setMouseTracking(True)
-        volumeWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-
-        #Assigning grid layout to volumeWidget
-        volumeWidget.grid = QtWidgets.QGridLayout()
-        volumeWidget.grid.setObjectName(name+"Volume")
-        volumeWidget.grid.setSpacing(0)
-        volumeWidget.grid.setContentsMargins(0, 0, 0, 0)
-        self.addGridRow(volumeWidget.grid, volumeWidget.gridCount, 6)
+        self.setupWidget(volumeWidget, name=name+"Volume", columns=6)
 
         #Assigning widgets for the volumeWidget
         volumeWidget.volumeBar = self.makeVolume(mediaWidget, volumeWidget)
@@ -400,13 +422,6 @@ class QTPie:
         controlWidget.volumeWidget = volumeWidget
         controlWidget.updateControls()
 
-        #Assigning grid layout to controlWidget
-        controlWidget.grid = QtWidgets.QGridLayout()
-        controlWidget.grid.setObjectName(name+"Controls")
-        controlWidget.grid.setSpacing(0)
-        controlWidget.grid.setContentsMargins(0, 0, 0, 0)
-        self.addGridRow(controlWidget.grid, controlWidget.gridCount, 12)
-
         #Adding widgets to controlWidget grid layout
         controlWidget.grid.addWidget(controlWidget.playPause, 1, 0, 1, 1)
         controlWidget.grid.addWidget(controlWidget.volumeWidget, 1, 1, 1, 6)
@@ -422,8 +437,8 @@ class QTPie:
         mediaWidget.mouseLeave.connect(lambda: self.actions.hideControls(mediaWidget, controlWidget))
 
         #Adding widgets to mediaWidget grid layout
-        mediaWidget.grid.addWidget(mediaWidget.video, 0, 0, 2, 11)
-        mediaWidget.grid.addWidget(controlWidget, 1, 0, 1, 11)
+        mediaWidget.grid.addWidget(mediaWidget.video, 0, 0, 20, 11)
+        mediaWidget.grid.addWidget(controlWidget, 18, 0, 2, 11)
         mediaWidget.setLayout(mediaWidget.grid)
         self.grid.addWidget(mediaWidget, gridData[1], gridData[0], gridData[3], gridData[2])
         
@@ -436,14 +451,14 @@ class QTPie:
     
     def addProgressBar(self, gridData, name=""):
         """
-        Combines the basic Progress Bar code into one function with added functionality and support for CSS syntax
+        Combines the basic Progress Bar code into one function with added functionality and support for CSS syntax.
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values
+            gridData (list of int): List of column, row, columnspan, rowspan values.
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
 
         Returns:\n
-            QTPieProgressBar: A PyQt5 progress bar
+            QTPieProgressBar: A QTPie progress bar.
         """
 
         progressBar = QTPieProgressBar()
@@ -456,18 +471,18 @@ class QTPie:
     
     def addSlider(self, gridData, action, name="", orientation="horizontal", minVal=0, maxVal=100):
         """
-        Combines the basic Slider code into one function with added functionality and support for CSS syntax
+        Combines the basic Slider code into one function with added functionality and support for CSS syntax.
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values
-            action (def): The function to be called when the slider is moved
+            gridData (list of int): List of column, row, columnspan, rowspan values.
+            action (def): The function to be called when the slider is moved.
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
             orientation (str, optional): Whether the slider is vertical or horizontal. Defaults to "horizontal".
             minVal (int, optional): Minimum slider value. Defaults to 0.
             maxVal (int, optional): Maximum slider value. Defaults to 100.
 
         Returns:\n
-            QTPieSlider: A PyQt5 slider
+            QTPieSlider: A QTPie slider.
         """
 
         orientationDict = {"horizontal": QtCore.Qt.Horizontal, "vertical": QtCore.Qt.Vertical}
@@ -485,15 +500,15 @@ class QTPie:
     
     def addRadioButton(self, gridData, name="", txt="RadioButton"):
         """
-        Combines the basic Radio Button code into one function with added functionality and support for CSS syntax
+        Combines the basic Radio Button code into one function with added functionality and support for CSS syntax.
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values
+            gridData (list of int): List of column, row, columnspan, rowspan values.
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
             txt (str, optional): The text the be displayed. Defaults to "RadioButton".
 
         Returns:\n
-            QTPieRadioButton: A PyQt5 radio button with a text tag
+            QTPieRadioButton: A QTPie radio button with a text tag.
         """
 
         radioButton = QTPieRadioButton()
@@ -506,15 +521,15 @@ class QTPie:
     
     def addCheckbox(self, gridData, name="", txt="Checkbox"):
         """
-        Combines the basic Checkbox code into one function with added functionality and support for CSS syntax
+        Combines the basic Checkbox code into one function with added functionality and support for CSS syntax.
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values
+            gridData (list of int): List of column, row, columnspan, rowspan values.
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
             txt (str, optional): The text the be displayed. Defaults to "Checkbox".
 
         Returns:\n
-            QTPieCheckbox: A PyQt5 checkbox with a text tag
+            QTPieCheckbox: A QTPie checkbox with a text tag.
         """
 
         checkbox = QTPieCheckbox()
@@ -527,14 +542,16 @@ class QTPie:
 
     def addTextbox(self, gridData, name="", align="left", enableDrop=False):
         """
-        Combines the basic Textbox code into one function with added functionality and support for CSS syntax
+        Combines the basic Textbox code into one function with added functionality and support for CSS syntax.
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values
+            gridData (list of int): List of column, row, columnspan, rowspan values.
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
+            aling (str, optional): left, right, center alignment of the content of the label. Defaults to "left".
+            enableDrop (bool, optional): Enables or disables text droppping into the text box. Defaults to False.
 
         Returns:\n
-            QTPieTextbox: A PyQt5 textbox with drag and drop optional
+            QTPieTextbox: A QTPie textbox with drag and drop optional
         """
 
         textbox = QTPieTextbox(dropArea=enableDrop)
@@ -547,18 +564,18 @@ class QTPie:
 
     def addDial(self, gridData, action, name="", minVal=0, maxVal=100, wrapping=True):
         """
-        Combines the basic Dial code into one function with added functionality and support for CSS syntax
+        Combines the basic Dial code into one function with added functionality and support for CSS syntax.
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values
-            action (def): The function to be called when the dial is rotated
+            gridData (list of int): List of column, row, columnspan, rowspan values.
+            action (def): The function to be called when the dial is rotated.
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
             minVal (int, optional): Minimum slider value. Defaults to 0.
             maxVal (int, optional): Maximum slider value. Defaults to 100.
             wrapping (bool, optional): Whether the dial can completely circle around. Defaults to True.
 
         Returns:\n
-            QTPieDial: A PyQt5 dial
+            QTPieDial: A QTPie dial.
         """
 
         dial = QTPieDial(wrapping=wrapping)
@@ -573,10 +590,10 @@ class QTPie:
 
     def addDropdown(self, gridData, name="", align="left", textEdit=False, autocomp=False, values=[]):
         """
-        Combines the basic AutofillBox code into one function with added functionality and support for CSS syntax
+        Combines the basic AutofillBox code into one function with added functionality and support for CSS syntax.
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values
+            gridData (list of int): List of column, row, columnspan, rowspan values.
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
             align (str, optional): The alignment for the text. Defaults to "left".
             textEdit (bool, optional): Determines whether the user can type or not. Defaults to False.
@@ -584,7 +601,7 @@ class QTPie:
             values (list of str, optional): The autocomplete values. Defaults to [].
 
         Returns:\n
-            QTPieTextbox: A PyQt5 combobox with a set of autofill values
+            QTPieTextbox: A QTPie dropdown with a set of autofill values
         """
 
         dropdown = QTPieDropdown()
@@ -600,7 +617,7 @@ class QTPie:
 
     def createMenu(self):
         """
-        Makes the menu bar like most applications have at the top of the screen
+        Makes the menu bar like most applications have at the top of the screen.
         """
 
         mainMenu = self.mainWindow.menuBar()
@@ -623,5 +640,4 @@ class QTPie:
 
         exitAction = QtWidgets.QAction(QtGui.QIcon("exit.png"), 'Exit', self.window)
         exitAction.setShortcut("Ctrl+E")
-        #exitAction.triggered.connect(self.exitWindow)
         fileMenu.addAction(exitAction)

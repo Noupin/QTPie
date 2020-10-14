@@ -1,6 +1,6 @@
 #pylint: disable=C0103, C0301, R0903
 """
-Holds a data class with tunable variables
+Holds a data class with tunable variables.
 """
 __author__ = "Noupin"
 
@@ -20,7 +20,7 @@ import utilities
 
 class Tunable:
     """
-    Tunable variables for Shift
+    Tunable variables for Shift.
     """
 
     jsonFile = None

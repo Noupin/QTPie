@@ -1,6 +1,6 @@
 #pylint: disable=C0103, C0301, R0902
 """
-Holds all the actions to be used on UI element interaction
+Holds all the actions to be used on UI element interaction.
 """
 __author__ = "Noupin"
 
@@ -8,7 +8,6 @@ __author__ = "Noupin"
 import os
 import sys
 import PyQt5
-from PyQt5 import QtWidgets, QtCore, QtGui
 
 #Allow for Python. relative imports
 dir_path = os.path.dirname(os.path.realpath(__file__))
@@ -22,51 +21,51 @@ from tunable import Tunable
 
 class Actions:
     """
-    Holds the actions functions for the QTPie GUI
+    Holds the actions functions for the QTPie GUI.
     """
 
     def fileDialog(self):
         """
-        Opens file dialog window
+        Opens file dialog window.
         """
 
-        filename, _ = QtWidgets.QFileDialog.getOpenFileName()
+        filename, _ = PyQt5.QtWidgets.QFileDialog.getOpenFileName()
     
     def load(self):
         """
-        Action once the load button is clicked
+        Action once the load button is clicked.
         """
 
         print("Clicked!")
     
     def slideAndProgress(self, slider, progress):
         """
-        Action when the slide is moved
+        Action when the slide is moved.
 
         Args:\n
-            slider (QTPieSlider): The initialized QTPie slider widget
-            progress (QTPieProgressBar): The progress bar to be changed
+            slider (QTPieSlider): The initialized QTPie slider widget.
+            progress (QTPieProgressBar): The progress bar to be changed.
         """
 
         progress.setValue(slider.value())
 
     def dialAndProgress(self, dial, progress):
         """
-        Action when the slide is moved
+        Action when the slide is moved.
 
         Args:\n
-            slider (QTPieSlider): The initialized QTPie slider widget
-            progress (QTPieProgressBar): The progress bar to be changed
+            slider (QTPieSlider): The initialized QTPie slider widget.
+            progress (QTPieProgressBar): The progress bar to be changed.
         """
 
         progress.setValue(dial.value())
     
     def onWindowClose(self, window):
         """
-        Actions to happen before the application window closes and the program finishes executing
+        Actions to happen before the application window closes and the program finishes executing.
 
         Args:\n
-            window (QTPieWidget, QTPieWindow): The object waiting for a close signal
+            window (QTPieWidget, QTPieWindow): The object waiting for a close signal.
         """
 
         x, y = window.pos().x(), window.pos().y()
@@ -78,12 +77,12 @@ class Actions:
     
     def playPause(self, mediaWidget, controlWidget, app):
         """
-        Swaps the play pause state of the media
+        Swaps the play pause state of the media,
 
         Args:\n
             mediaWidget (QTPieWidget): The widget that holds all media player widgets.
             controlWidget (QTPieWidget): The widget that holds all media player control widgets.
-            app (PyQt5.QtWidgets.QApplication): The application to change icons
+            app (PyQt5.QtWidgets.QApplication): The application to change icons,
         """
 
         if mediaWidget.media.playing:
@@ -95,13 +94,13 @@ class Actions:
     
     def changeVolume(self, mediaWidget, volumeWidget, app, tunableDict):
         """
-        Changes the volume given a 1-100 value from the controller
+        Changes the volume given a 1-100 value from the controller.
 
         Args:\n
             mediaWidget (QTPieWidget): The widget that holds all media player widgets.
             volumeWidget (QTPieWidget): The widget that holds all media player volume widgets.
-            app (PyQt5.QtWidgets.QApplication): The application to change icons
-            tunableDict (JSON): The tunable variables for the application
+            app (PyQt5.QtWidgets.QApplication): The application to change icons.
+            tunableDict (JSON): The tunable variables for the application.
         """
 
         mediaWidget.media.setVolume(volumeWidget.volumeBar.value())
@@ -117,22 +116,22 @@ class Actions:
     
     def changeTimestamp(self, mediaWidget, controller):
         """
-        Changes the timestamp given a 1-100 value from the controller
+        Changes the timestamp given a 1-100 value from the controller.
 
         Args:\n
             mediaWidget (QTPieWidget): The widget that holds all media player widgets.
-            controller (QTPieSlider or QTPieDial): Controls the videos position from 0-duration values
+            controller (QTPieSlider or QTPieDial): Controls the videos position from 0-duration values.
         """
 
         mediaWidget.media.setPosition(controller.value())
     
     def timestampChanged(self, mediaWidget, controller):
         """
-        Changes the controller when the timestamp changes
+        Changes the controller when the timestamp changes.
 
         Args:\n
             mediaWidget (QTPieWidget): The widget that holds all media player widgets.
-            controller (QTPieSlider or QTPieDial): Controls the videos position from 0-duration values
+            controller (QTPieSlider or QTPieDial): Controls the videos position from 0-duration values.
         """
 
         controller.setValue(mediaWidget.media.position())
@@ -143,18 +142,18 @@ class Actions:
     
     def durationChanged(self, mediaWidget, controller):
         """
-        Changes the controller when the timestamp changes
+        Changes the controller when the timestamp changes.
 
         Args:\n
             mediaWidget (QTPieWidget): The widget that holds all media player widgets.
-            controller (QTPieSlider or QTPieDial): Controls the videos position from 0-duration values
+            controller (QTPieSlider or QTPieDial): Controls the videos position from 0-duration values.
         """
 
         controller.setRange(0, mediaWidget.media.duration())
     
     def showControls(self, controlWidget):
         """
-        Enables the playPause, volume, and progress widgets passed
+        Enables the playPause, volume, and progress widgets passed.
 
         Args:\n
             controlWidget (QTPieWidget): The widget that holds all media player control widgets.
@@ -164,7 +163,7 @@ class Actions:
     
     def hideControls(self, mediaWidget, controlWidget):
         """
-        Enables the playPause, volume, and progress widgets passed
+        Enables the playPause, volume, and progress widgets passed.
 
         Args:\n
             mediaWidget (QTPieWidget): The widget that holds all media player widgets.
@@ -178,13 +177,13 @@ class Actions:
     
     def openFile(self, mediaWidget):
         """
-        Opens a new file and plays the media
+        Opens a new file and plays the media.
 
         Args:\n
             mediaWidget (QTPieWidget): The widget that holds all media player widgets.
         """
 
-        filename, _ = QtWidgets.QFileDialog.getOpenFileName()
+        filename, _ = PyQt5.QtWidgets.QFileDialog.getOpenFileName()
 
         if filename.lower().endswith(('.mp4', '.avi', '.m4v')):
             mediaWidget.media.setMedia(PyQt5.QtMultimedia.QMediaContent(PyQt5.QtCore.QUrl.fromLocalFile(filename)))
@@ -192,13 +191,13 @@ class Actions:
 
     def muteUnmute(self, mediaWidget, volumeWidget, app, tunableDict):
         """
-        Swaps the mute state of the media
+        Swaps the mute state of the media.
 
         Args:\n
             mediaWidget (QTPieWidget): The widget that holds all media player widgets.
             volumeWidget (QTPieWidget): The widget that holds all media player volume widgets.
-            app (PyQt5.QtWidgets.QApplication): The application to change icons
-            tunableDict (JSON): The tunable variables for the application
+            app (PyQt5.QtWidgets.QApplication): The application to change icons.
+            tunableDict (JSON): The tunable variables for the application.
         """
 
         if not mediaWidget.media.isMuted():
@@ -212,7 +211,7 @@ class Actions:
 
     def volumeHover(self, volumeWidget):
         """
-        shows the volume slider bar when hovering over the volume button
+        Shows the volume slider bar when hovering over the volume button.
 
         Args:\n
             volumeWidget (QTPieWidget): The widget that holds all media player volume widgets.
@@ -222,7 +221,7 @@ class Actions:
     
     def volumeUnhover(self, volumeWidget):
         """
-        shows the volume slider bar when hovering over the volume button
+        Shows the volume slider bar when hovering over the volume button.
 
         Args:\n
             volumeWidget (QTPieWidget): The widget that holds all media player volume widgets.

@@ -1,6 +1,6 @@
 #pylint: disable=C0103, C0301, R0903, E1101
 """
-No-self-use functions for QTPie
+No-self-use functions for QTPie.
 """
 __author__ = "Noupin"
 
@@ -17,7 +17,7 @@ sys.path.insert(0, parent_dir_path)
 
 def changeJSON(key, value):
     """
-    Takes a key and a value to change the tunable JSON file
+    Takes a key and a value to change the tunable JSON file.
     """
 
     with open(resource_path("tunable.json")) as jsonFile:
@@ -29,7 +29,10 @@ def changeJSON(key, value):
         json.dump(tunableDict, jsonFile)
 
 def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
+    """
+    Get absolute path to resource, works for dev and for PyInstaller.
+    """
+
     try:
         # PyInstaller creates a temp folder and stores path in _MEIPASS
         base_path = sys._MEIPASS
