@@ -18,8 +18,8 @@ sys.path.insert(0, parent_dir_path)
 
 #First Party Imports
 import utilities
+from actions import Actions
 from tunable import Tunable
-from QTPie.actions import Actions
 from QTPie.UI.dial import QTPieDial
 from QTPie.UI.image import QTPieImage
 from QTPie.UI.label import QTPieLabel

@@ -9,9 +9,9 @@ import os
 import sys
 
 #First Party Imports
-from QTPie.ui import UI
-from QTPie.QTPie import QTPie
+from ui import UI
 from tunable import Tunable
+from QTPie.QTPie import QTPie
 
 
 class Main:
