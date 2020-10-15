@@ -18,27 +18,27 @@ sys.path.insert(0, parent_dir_path)
 
 #First Party Imports
 import utilities
-from actions import Actions
 from tunable import Tunable
-from UI.dial import QTPieDial
-from UI.image import QTPieImage
-from UI.label import QTPieLabel
-from UI.media import QTPieMedia
-from UI.video import QTPieVideo
-from UI.button import QTPieButton
-from UI.pixmap import QTPiePixmap
-from UI.slider import QTPieSlider
-from UI.widget import QTPieWidget
-from UI.window import QTPieWindow
-from UI.textbox import QTPieTextbox
-from UI.checkbox import QTPieCheckbox
-from UI.dropdown import QTPieDropdown
-from UI.scrollArea import QTPieScroll
-from UI.mediaWidget import QTPieMediaWidget
-from UI.progressBar import QTPieProgressBar
-from UI.radioButton import QTPieRadioButton
-from UI.volumeWidget import QTPieVolumeWidget
-from UI.controlWidget import QTPieControlWidget
+from QTPie.actions import Actions
+from QTPie.UI.dial import QTPieDial
+from QTPie.UI.image import QTPieImage
+from QTPie.UI.label import QTPieLabel
+from QTPie.UI.media import QTPieMedia
+from QTPie.UI.video import QTPieVideo
+from QTPie.UI.button import QTPieButton
+from QTPie.UI.pixmap import QTPiePixmap
+from QTPie.UI.slider import QTPieSlider
+from QTPie.UI.widget import QTPieWidget
+from QTPie.UI.window import QTPieWindow
+from QTPie.UI.textbox import QTPieTextbox
+from QTPie.UI.checkbox import QTPieCheckbox
+from QTPie.UI.dropdown import QTPieDropdown
+from QTPie.UI.scrollArea import QTPieScroll
+from QTPie.UI.mediaWidget import QTPieMediaWidget
+from QTPie.UI.progressBar import QTPieProgressBar
+from QTPie.UI.radioButton import QTPieRadioButton
+from QTPie.UI.volumeWidget import QTPieVolumeWidget
+from QTPie.UI.controlWidget import QTPieControlWidget
 
 
 class QTPie:
@@ -57,7 +57,7 @@ class QTPie:
             title (str, optional): The name of the window. Defaults to "Window".
         """
 
-        stylesheet = open(utilities.resource_path("QTPie Style\\style.css"), "r")
+        stylesheet = open(utilities.resource_path("QTPie\\QTPie Style\\style.css"), "r")
         self.styling = stylesheet.read()
         stylesheet.close()
 
@@ -78,7 +78,7 @@ class QTPie:
         self.gridCount = 0
         self.grid.setSpacing(0)
         self.grid.setContentsMargins(0, 0, 0, 0)
-        self.space = self.addLabel([1, 1, 1, 1], txt="", name="Spacer", addToGrid=False)
+        self.space = self.makeLabel(txt="", name="Spacer", addToGrid=False)
 
         self.window = QTPieWidget()
         self.window.setLayout(self.grid)
@@ -147,17 +147,17 @@ class QTPie:
             grid.setColumnStretch(_, 1)
         grid.setRowStretch(count, 1)
 
-    def addLabel(self, gridData, name="", txt="Button", enableDrop=False, align="center", addToGrid=True):
+    def makeLabel(self, name="", txt="Button", enableDrop=False, align="center", addToGrid=True, gridData=[0, 0, 0, 0]):
         """
         Combines the basic Label code into one function with added functionality and support for css syntax.
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values.
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
             txt (str, optional): The text to be displayed. Defaults to "Button".
             enableDrop (bool, optional): Determines whether drag and drop is enabled. Defaults to False.
             align (str, optional): left, right, center alignment of the content of the label. Defaults to "center".
-            addToGrid (bool, optional): whether ot add to the master grid or not. Defaults to True.
+            addToGrid (bool, optional): Determines whether to add to the main grid or not. Defaults to True.
+            gridData (list of int, optional): List of column, row, columnspan, rowspan values. Defaults to [0, 0, 0, 0].
 
         Returns:\n
             QTPieLabel: A QTPie label.
@@ -174,41 +174,18 @@ class QTPie:
 
         return label
     
-    def addButton(self, gridData, action, name="", txt="Button", enableDrop=False):
-        """
-        Combines the basic Button code into one function with added functionality and support for css syntax.
-
-        Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values.
-            action (def): The function to be called on click.
-            name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
-            txt (str, optional): The text the be displayed. Defaults to "Button".
-            enableDrop (bool, optional): Determines whether drag and drop is enabled. Defaults to False.
-
-        Returns:\n
-            QTPieButton: A QTPie button.
-        """
-
-        btn = QTPieButton(dropArea=enableDrop)
-        btn.setObjectName(name)
-        btn.setText(txt)
-        btn.clicked.connect(action)
-        btn.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        self.grid.addWidget(btn, gridData[1], gridData[0], gridData[3], gridData[2])
-
-        return btn
-    
-    def addImage(self, gridData, name="", filename="smile.jpg", keepAR=True, enableDrop=False, align="center"):
+    def makeImage(self, name="", filename=r"smile.jpg", keepAR=True, enableDrop=False, align="center", addToGrid=True, gridData=[0, 0, 0, 0]):
         """
         Combines the basic Image code into one function with added functionality and support for CSS syntax
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
             filename (str, optional): The filepath for the pixmap image. Defaults to "icon.png".
             keepAR (bool, optional): Whether to keep the original pictures aspect ratio or fit to given width and height. Defaults to True.
             enableDrop (bool, optional): Determines whether drag and drop is enabled. Defaults to False.
             align (str, optional): left, right, center alignment of the content of the label. Defaults to "center".
+            addToGrid (bool, optional): Determines whether to add to the main grid or not. Defaults to True.
+            gridData (list of int, optional): List of column, row, columnspan, rowspan values. Defaults to [0, 0, 0, 0].
 
         Returns:\n
             QTPieImage: A QTPie image with a pixmamp in it and extending the QTPieLabel
@@ -225,23 +202,26 @@ class QTPie:
         image.setSizePolicy(PyQt5.QtWidgets.QSizePolicy.Ignored, PyQt5.QtWidgets.QSizePolicy.Ignored)
         self.alignWidget(image, align)
 
-        self.grid.addWidget(image, gridData[1], gridData[0], gridData[3], gridData[2])
+        if addToGrid:
+            self.grid.addWidget(image, gridData[1], gridData[0], gridData[3], gridData[2])
 
         return image
 
-    def makeButton(self, clickAction, mouseEnterAction=None, mouseLeaveAction=None, name="", txt="Button", icon="", enableDrop=False, enableHover=False):
+    def makeButton(self, clickAction, mouseEnterAction=None, mouseLeaveAction=None, name="", txt="Button", icon="", enableDrop=False, enableHover=False, addToGrid=True, gridData=[0, 0, 0, 0]):
         """
-        Combines the basic Button code into one function with added functionality and support for css syntax. Does not apply to grid.
+        Combines the basic Button code into one function with added functionality and support for css syntax. Optional to apply to grid.
 
         Args:\n
             clickAction (def): The function to be called on click.
             mouseEnterAction (def, optional): The function to be called on the mouse entering the button. Defaults to None.
-            mouseLeaveAction (def): The function to be called on the mouse leaving the button. Defaults to None.
+            mouseLeaveAction (def, optional): The function to be called on the mouse leaving the button. Defaults to None.
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
             txt (str, optional): The text the be displayed. Defaults to "Button".
             icon (str, optional): The string corresponding to an icon. Defaults to "".
             enableDrop (bool, optional): Determines whether drag and drop is enabled. Defaults to False.
             enableHover (bool, optional): Determines whether hovering signals are enabled. Defaults to False.
+            addToGrid (bool, optional): Determines whether to add to the main grid or not. Defaults to True.
+            gridData (list of int, optional): List of column, row, columnspan, rowspan values. Defaults to [0, 0, 0, 0].
 
         Returns:\n
             QTPieButton: A PyQt5 push button.
@@ -267,6 +247,9 @@ class QTPie:
             btn.hover = enableHover
             btn.mouseLeave.connect(mouseLeaveAction)
         btn.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+
+        if addToGrid:
+            self.grid.addWidget(btn, gridData[1], gridData[0], gridData[3], gridData[2])
 
         return btn 
 
@@ -357,14 +340,15 @@ class QTPie:
             self.addGridRow(widget.grid, widget.gridCount, columns)
             widget.gridCount += 1
 
-    def addVideo(self, gridData, name="", filename=r"ChrisH.mp4", enableDrop=False):
+    def makeVideo(self, name="", filename=r"ChrisH.mp4", enableDrop=False, addToGrid=True, gridData=[0, 0, 0, 0]):
         """
-        Combines the basic Video code into one function with added functionality and support for CSS syntax
+        Combines the basic Video code into one function with added functionality and support for CSS syntax.
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
             filename (str, optional): The filepath for the media player video.
+            addToGrid (bool, optional): Determines whether to add to the main grid or not. Defaults to True.
+            gridData (list of int, optional): List of column, row, columnspan, rowspan values. Defaults to [0, 0, 0, 0].
         
         Returns:\n
             QTPieVideo: A PyQt5 media player
@@ -393,8 +377,8 @@ class QTPie:
         self.setupWidget(controlWidget, name=name+"Controls", columns=12)
 
         #Assigning widgets for the controlWidget
-        controlWidget.playPause = self.makeButton(lambda: self.actions.playPause(mediaWidget, controlWidget, self.app), name="VideoPlayPause", icon="pause")
-        controlWidget.openFile = self.makeButton(lambda: self.actions.openFile(mediaWidget), name="VideoOpenFile", icon="file")
+        controlWidget.playPause = self.makeButton(lambda: self.actions.playPause(mediaWidget, controlWidget, self.app), name="VideoPlayPause", icon="pause", addToGrid=False)
+        controlWidget.openFile = self.makeButton(lambda: self.actions.openFile(mediaWidget), name="VideoOpenFile", icon="file", addToGrid=False)
         controlWidget.videoProgress = self.makeVideoProgressBar(mediaWidget)
 
 
@@ -406,7 +390,7 @@ class QTPie:
         volumeWidget.volumeBar = self.makeVolume(mediaWidget, volumeWidget)
         volumeWidget.volumeBtn = self.makeButton(lambda: self.actions.muteUnmute(mediaWidget, volumeWidget, self.app, self.tunableDict),
                                                  mouseEnterAction=lambda: self.actions.volumeHover(volumeWidget),
-                                                 name="VideoVolumeBtn", icon="volume", enableHover=True)
+                                                 name="VideoVolumeBtn", icon="volume", enableHover=True, addToGrid=False)
 
         volumeWidget.mouseLeave.connect(lambda: self.actions.volumeUnhover(volumeWidget))
 
@@ -440,22 +424,23 @@ class QTPie:
         mediaWidget.grid.addWidget(mediaWidget.video, 0, 0, 20, 11)
         mediaWidget.grid.addWidget(controlWidget, 18, 0, 2, 11)
         mediaWidget.setLayout(mediaWidget.grid)
-        self.grid.addWidget(mediaWidget, gridData[1], gridData[0], gridData[3], gridData[2])
         
         self.actions.hideControls(mediaWidget, controlWidget)
         self.actions.playPause(mediaWidget, controlWidget, self.app)
 
-        self.app.setStyleSheet(self.app.styleSheet())
+        if addToGrid:
+            self.grid.addWidget(mediaWidget, gridData[1], gridData[0], gridData[3], gridData[2])
 
         return mediaWidget
     
-    def addProgressBar(self, gridData, name=""):
+    def makeProgressBar(self, name="", addToGrid=True, gridData=[0, 0, 0, 0]):
         """
         Combines the basic Progress Bar code into one function with added functionality and support for CSS syntax.
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values.
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
+            addToGrid (bool, optional): Determines whether to add to the main grid or not. Defaults to True.
+            gridData (list of int, optional): List of column, row, columnspan, rowspan values. Defaults to [0, 0, 0, 0].
 
         Returns:\n
             QTPieProgressBar: A QTPie progress bar.
@@ -464,22 +449,24 @@ class QTPie:
         progressBar = QTPieProgressBar()
         progressBar.setObjectName(name)
         progressBar.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        self.grid.addWidget(progressBar, gridData[1], gridData[0], gridData[3], gridData[2])
 
+        if addToGrid:
+            self.grid.addWidget(progressBar, gridData[1], gridData[0], gridData[3], gridData[2])
         
         return progressBar
     
-    def addSlider(self, gridData, action, name="", orientation="horizontal", minVal=0, maxVal=100):
+    def makeSlider(self, action, name="", orientation="horizontal", minVal=0, maxVal=100, addToGrid=True, gridData=[0, 0, 0, 0]):
         """
         Combines the basic Slider code into one function with added functionality and support for CSS syntax.
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values.
             action (def): The function to be called when the slider is moved.
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
             orientation (str, optional): Whether the slider is vertical or horizontal. Defaults to "horizontal".
             minVal (int, optional): Minimum slider value. Defaults to 0.
             maxVal (int, optional): Maximum slider value. Defaults to 100.
+            addToGrid (bool, optional): Determines whether to add to the main grid or not. Defaults to True.
+            gridData (list of int, optional): List of column, row, columnspan, rowspan values. Defaults to [0, 0, 0, 0].
 
         Returns:\n
             QTPieSlider: A QTPie slider.
@@ -494,18 +481,21 @@ class QTPie:
         slider.setMaximum(maxVal)
         slider.valueChanged.connect(action)
         slider.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        self.grid.addWidget(slider, gridData[1], gridData[0], gridData[3], gridData[2])
+
+        if addToGrid:
+            self.grid.addWidget(slider, gridData[1], gridData[0], gridData[3], gridData[2])
 
         return slider
     
-    def addRadioButton(self, gridData, name="", txt="RadioButton"):
+    def makeRadioButton(self, name="", txt="RadioButton", addToGrid=True, gridData=[0, 0, 0, 0]):
         """
         Combines the basic Radio Button code into one function with added functionality and support for CSS syntax.
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values.
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
             txt (str, optional): The text the be displayed. Defaults to "RadioButton".
+            addToGrid (bool, optional): Determines whether to add to the main grid or not. Defaults to True.
+            gridData (list of int, optional): List of column, row, columnspan, rowspan values. Defaults to [0, 0, 0, 0].
 
         Returns:\n
             QTPieRadioButton: A QTPie radio button with a text tag.
@@ -515,18 +505,21 @@ class QTPie:
         radioButton.setObjectName(name)
         radioButton.setText(txt)
         radioButton.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        self.grid.addWidget(radioButton, gridData[1], gridData[0], gridData[3], gridData[2])
+
+        if addToGrid:
+            self.grid.addWidget(radioButton, gridData[1], gridData[0], gridData[3], gridData[2])
 
         return radioButton
     
-    def addCheckbox(self, gridData, name="", txt="Checkbox"):
+    def makeCheckbox(self, name="", txt="Checkbox", addToGrid=True, gridData=[0, 0, 0, 0]):
         """
         Combines the basic Checkbox code into one function with added functionality and support for CSS syntax.
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values.
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
             txt (str, optional): The text the be displayed. Defaults to "Checkbox".
+            addToGrid (bool, optional): Determines whether to add to the main grid or not. Defaults to True.
+            gridData (list of int, optional): List of column, row, columnspan, rowspan values. Defaults to [0, 0, 0, 0].
 
         Returns:\n
             QTPieCheckbox: A QTPie checkbox with a text tag.
@@ -536,19 +529,22 @@ class QTPie:
         checkbox.setObjectName(name)
         checkbox.setText(txt)
         checkbox.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        self.grid.addWidget(checkbox, gridData[1], gridData[0], gridData[3], gridData[2])
+
+        if addToGrid:
+            self.grid.addWidget(checkbox, gridData[1], gridData[0], gridData[3], gridData[2])
 
         return checkbox
 
-    def addTextbox(self, gridData, name="", align="left", enableDrop=False):
+    def makeTextbox(self, name="", align="left", enableDrop=False, addToGrid=True, gridData=[0, 0, 0, 0]):
         """
         Combines the basic Textbox code into one function with added functionality and support for CSS syntax.
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values.
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
             aling (str, optional): left, right, center alignment of the content of the label. Defaults to "left".
             enableDrop (bool, optional): Enables or disables text droppping into the text box. Defaults to False.
+            addToGrid (bool, optional): Determines whether to add to the main grid or not. Defaults to True.
+            gridData (list of int, optional): List of column, row, columnspan, rowspan values. Defaults to [0, 0, 0, 0].
 
         Returns:\n
             QTPieTextbox: A QTPie textbox with drag and drop optional
@@ -558,21 +554,24 @@ class QTPie:
         textbox.setObjectName(name)
         textbox.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
         self.alignWidget(textbox, align)
-        self.grid.addWidget(textbox, gridData[1], gridData[0], gridData[3], gridData[2])
+
+        if addToGrid:
+            self.grid.addWidget(textbox, gridData[1], gridData[0], gridData[3], gridData[2])
 
         return textbox
 
-    def addDial(self, gridData, action, name="", minVal=0, maxVal=100, wrapping=True):
+    def makeDial(self, action, name="", minVal=0, maxVal=100, wrapping=True, addToGrid=True, gridData=[0, 0, 0, 0]):
         """
         Combines the basic Dial code into one function with added functionality and support for CSS syntax.
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values.
             action (def): The function to be called when the dial is rotated.
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
             minVal (int, optional): Minimum slider value. Defaults to 0.
             maxVal (int, optional): Maximum slider value. Defaults to 100.
             wrapping (bool, optional): Whether the dial can completely circle around. Defaults to True.
+            addToGrid (bool, optional): Determines whether to add to the main grid or not. Defaults to True.
+            gridData (list of int, optional): List of column, row, columnspan, rowspan values. Defaults to [0, 0, 0, 0].
 
         Returns:\n
             QTPieDial: A QTPie dial.
@@ -584,21 +583,24 @@ class QTPie:
         dial.setMaximum(maxVal)
         dial.valueChanged.connect(action)
         dial.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        self.grid.addWidget(dial, gridData[1], gridData[0], gridData[3], gridData[2])
+
+        if addToGrid:
+            self.grid.addWidget(dial, gridData[1], gridData[0], gridData[3], gridData[2])
 
         return dial
 
-    def addDropdown(self, gridData, name="", align="left", textEdit=False, autocomp=False, values=[]):
+    def makeDropdown(self, name="", align="left", textEdit=False, autocomp=False, values=[], addToGrid=True, gridData=[0, 0, 0, 0]):
         """
         Combines the basic AutofillBox code into one function with added functionality and support for CSS syntax.
 
         Args:\n
-            gridData (list of int): List of column, row, columnspan, rowspan values.
             name (str, optional): The name for the QTPie stylesheet to specify style. Defaults to "".
             align (str, optional): The alignment for the text. Defaults to "left".
             textEdit (bool, optional): Determines whether the user can type or not. Defaults to False.
             autocomp (bool, optional): Determines whether the dropdown autocompletes the text. Defaults to False.
             values (list of str, optional): The autocomplete values. Defaults to [].
+            addToGrid (bool, optional): Determines whether to add to the main grid or not. Defaults to True.
+            gridData (list of int, optional): List of column, row, columnspan, rowspan values. Defaults to [0, 0, 0, 0].
 
         Returns:\n
             QTPieTextbox: A QTPie dropdown with a set of autofill values
@@ -611,7 +613,9 @@ class QTPie:
         for _ in values:
             dropdown.addItem(_)
         dropdown.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-        self.grid.addWidget(dropdown, gridData[1], gridData[0], gridData[3], gridData[2])
+
+        if addToGrid:
+            self.grid.addWidget(dropdown, gridData[1], gridData[0], gridData[3], gridData[2])
 
         return dropdown
 

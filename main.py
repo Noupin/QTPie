@@ -8,14 +8,9 @@ __author__ = "Noupin"
 import os
 import sys
 
-#Allow for Python. relative imports
-dir_path = os.path.dirname(os.path.realpath(__file__))
-parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
-sys.path.insert(0, parent_dir_path)
-
 #First Party Imports
-from ui import UI
-from QTPie import QTPie
+from QTPie.ui import UI
+from QTPie.QTPie import QTPie
 from tunable import Tunable
 
 
@@ -29,9 +24,9 @@ class Main:
         Initializes the application.
         """
 
-        self.QTPie = QTPie(tunableDict=Tunable.tunableDict, title="QTPie")
+        self.QTPie = QTPie(icon=r"icon.png", tunableDict=Tunable.tunableDict, title="QTPie")
         self.ui = UI(self.QTPie)
-        self.ui.makePage()
+        self.ui.makeLoadPage()
     
 if __name__ == "__main__":
     CAS = Main()

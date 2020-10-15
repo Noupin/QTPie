@@ -1,8 +1,0 @@
-#Cache files
-**__pycache__/
-
-#File for testing code
-codeTest.py
-
-#VSCode Settings
-.vscode/

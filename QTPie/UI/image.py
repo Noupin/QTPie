@@ -11,7 +11,7 @@ import PyQt5
 from PyQt5 import QtWidgets, QtCore, QtGui
 
 #First Party Imports
-from UI.label import QTPieLabel
+from QTPie.UI.label import QTPieLabel
 
 
 class QTPieImage(QTPieLabel):

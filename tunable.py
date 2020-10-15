@@ -26,5 +26,5 @@ class Tunable:
     jsonFile = None
     tunableDict = None
 
-    with open(utilities.resource_path("tunable.json")) as jsonFile:
+    with open(utilities.resource_path(r"tunable.json")) as jsonFile:
         tunableDict = json.load(jsonFile)

@@ -9,23 +9,18 @@ import os
 import sys
 import json
 
-#Allow for Python. relative imports
-dir_path = os.path.dirname(os.path.realpath(__file__))
-parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
-sys.path.insert(0, parent_dir_path)
-
 
 def changeJSON(key, value):
     """
     Takes a key and a value to change the tunable JSON file.
     """
 
-    with open(resource_path("tunable.json")) as jsonFile:
+    with open(resource_path(r"tunable.json")) as jsonFile:
         tunableDict = json.load(jsonFile)
 
     tunableDict[key] = value
 
-    with open(resource_path("tunable.json"), 'w') as jsonFile:
+    with open(resource_path(r"tunable.json"), 'w') as jsonFile:
         json.dump(tunableDict, jsonFile)
 
 def resource_path(relative_path):

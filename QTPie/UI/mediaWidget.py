@@ -10,7 +10,7 @@ import sys
 import PyQt5
 
 #First Party Imports
-from UI.widget import QTPieWidget
+from QTPie.UI.widget import QTPieWidget
 
 
 class QTPieMediaWidget(QTPieWidget):
